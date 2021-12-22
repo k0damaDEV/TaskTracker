@@ -13,7 +13,6 @@ import java.time.Instant;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "users")
 public class User {
     @Id
@@ -22,6 +21,14 @@ public class User {
     private String firstName;
     private String lastName;
     private String email;
+    private String password;
     @CreationTimestamp
     private Instant createdAt;
+
+    public User(String firstName, String lastName, String email, String password) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+    }
 }
