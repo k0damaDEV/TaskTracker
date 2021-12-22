@@ -11,5 +11,8 @@ start:
 install:
 	./gradlew installDist
 
+migrations:
+	./gradlew diffChangeLog
+
 test:
 	./gradlew test

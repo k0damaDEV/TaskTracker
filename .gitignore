@@ -17,6 +17,10 @@ bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
 
+### BASE ###
+*.mv.db
+*.trace.db
+
 ### IntelliJ IDEA ###
 .idea
 *.iws
