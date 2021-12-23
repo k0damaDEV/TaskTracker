@@ -2,6 +2,7 @@ plugins {
     id 'org.springframework.boot' version '2.6.2'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
+    id 'jacoco'
     id 'application'
     id 'org.liquibase.gradle' version '2.1.0'
 }
@@ -12,7 +13,7 @@ application {
 
 group = 'hexlet.code'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '1.8'
+sourceCompatibility = "11"
 
 repositories {
     mavenCentral()
@@ -24,11 +25,9 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-security'
-
-
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa:2.1.4.RELEASE'
-
     implementation 'org.liquibase:liquibase-core:4.6.1'
+    testImplementation 'com.github.database-rider:rider-junit5:1.32.0'
 
     implementation group: 'org.postgresql', name: 'postgresql', version: '42.2.24'
     runtimeOnly 'com.h2database:h2:1.4.200'
@@ -48,6 +47,12 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+jacocoTestReport {
+    reports {
+        xml.required = true
+    }
 }
 
 diffChangeLog {
@@ -78,3 +83,4 @@ liquibase {
 task stage(dependsOn: ['clean', 'installDist'])
 installDist.mustRunAfter clean
 
+targetCompatibility = JavaVersion.VERSION_11

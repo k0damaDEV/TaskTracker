@@ -16,3 +16,6 @@ migrations:
 
 test:
 	./gradlew test
+
+report:
+	./gradlew jacocoTestReport
