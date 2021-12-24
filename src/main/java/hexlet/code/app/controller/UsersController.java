@@ -4,6 +4,7 @@ import hexlet.code.app.dto.UserDto;
 import hexlet.code.app.exceptions.UserNotFoundException;
 import hexlet.code.app.model.User;
 import hexlet.code.app.repository.UserRepository;
+import hexlet.code.app.service.UserAuthenticationService;
 import hexlet.code.app.service.UserService;
 import lombok.AllArgsConstructor;
 import org.hibernate.annotations.NotFound;
