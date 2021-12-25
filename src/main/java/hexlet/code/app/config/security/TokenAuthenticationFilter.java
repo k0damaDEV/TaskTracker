@@ -25,12 +25,14 @@ public class TokenAuthenticationFilter extends AbstractAuthenticationProcessingF
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request,
-                                                HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
+                                                HttpServletResponse response) throws AuthenticationException {
         var authenticationToken = Optional.ofNullable(request.getHeader(HttpHeaders.AUTHORIZATION))
                 .map(auth -> auth.replaceFirst("^" + BEARER, ""))
                 .map(String::trim)
                 .map(token -> new UsernamePasswordAuthenticationToken(token, token))
                 .orElseThrow(() -> new BadCredentialsException("No token provided"));
+
+        System.out.println(authenticationToken);
 
         return getAuthenticationManager().authenticate(authenticationToken);
     }

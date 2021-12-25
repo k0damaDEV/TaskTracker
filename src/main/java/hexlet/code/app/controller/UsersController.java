@@ -4,23 +4,26 @@ import hexlet.code.app.dto.UserDto;
 import hexlet.code.app.exceptions.UserNotFoundException;
 import hexlet.code.app.model.User;
 import hexlet.code.app.repository.UserRepository;
-import hexlet.code.app.service.UserAuthenticationService;
 import hexlet.code.app.service.UserService;
 import lombok.AllArgsConstructor;
-import org.hibernate.annotations.NotFound;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 
+import static hexlet.code.app.controller.UsersController.USERS_CONTROLLER_PATH;
+
 @AllArgsConstructor
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("${base-url}" + USERS_CONTROLLER_PATH)
 public class UsersController {
-    private static final String ID = "/{id}";
+    public static final String ID = "/{id}";
+    public static final String USERS_CONTROLLER_PATH = "/users";
+
+    private static final String ONLY_OWNER_BY_ID = """
+            @userRepository.findById(#id).get().getEmail() == authentication.getName()
+        """;
 
 
     private final UserService userService;
@@ -42,7 +45,8 @@ public class UsersController {
                 .orElseThrow(() -> new UserNotFoundException("User with such ID not found"));
     }
 
-    @PatchMapping(ID)
+    @PutMapping(ID)
+    @PreAuthorize(ONLY_OWNER_BY_ID)
     public User updateUser(
             @PathVariable(name = "id") Long id,
             @Valid @RequestBody UserDto userDto
@@ -51,6 +55,7 @@ public class UsersController {
     }
 
     @DeleteMapping(ID)
+    @PreAuthorize(ONLY_OWNER_BY_ID)
     public String deleteUser(@PathVariable(name = "id") Long id) {
         userRepository.deleteById(id);
         return "OK";

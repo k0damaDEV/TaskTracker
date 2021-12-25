@@ -13,7 +13,7 @@ application {
 
 group = 'hexlet.code'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = "11"
+sourceCompatibility = "15"
 
 repositories {
     mavenCentral()
@@ -84,4 +84,4 @@ liquibase {
 task stage(dependsOn: ['clean', 'installDist'])
 installDist.mustRunAfter clean
 
-targetCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_15

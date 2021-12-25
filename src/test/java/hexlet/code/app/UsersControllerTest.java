@@ -4,6 +4,7 @@ import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.junit5.api.DBRider;
 import hexlet.code.app.model.User;
 import hexlet.code.app.repository.UserRepository;
+import hexlet.code.app.utils.TestUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -12,16 +13,14 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.test.web.servlet.MockMvc;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 import javax.transaction.Transactional;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+
+import static hexlet.code.app.controller.UsersController.USERS_CONTROLLER_PATH;
+import static hexlet.code.app.controller.UsersController.ID;
 
 @Transactional
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -30,31 +29,30 @@ import java.nio.file.Paths;
 @DataSet("users.yml")
 @AutoConfigureMockMvc
 class UsersControllerTest {
-    private static final String BASE_API_URL = "/api";
-    private static final String USERS = "/users";
     private static final String FIXTURES_PATH = "src/test/resources/fixtures/";
     private static String userToCreateJson;
     private static String userToPatchJson;
     private static String userToCreateWithIncorrectCredentialsJson;
+    private static final String BASE_API_URL = "/api";
 
-    @Autowired
-    private MockMvc mockMvc;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private TestUtils testUtils;
 
     @BeforeAll
-    void init() throws IOException {
-        userToCreateJson = readFileContent(FIXTURES_PATH + "userToCreate.json");
-        userToPatchJson = readFileContent(FIXTURES_PATH + "userToPatch.json");
-        userToCreateWithIncorrectCredentialsJson = readFileContent(FIXTURES_PATH
+    void init() throws Exception {
+        userToCreateJson = testUtils.readFileContent(FIXTURES_PATH + "userToCreate.json");
+        userToPatchJson = testUtils.readFileContent(FIXTURES_PATH + "userToPatch.json");
+        userToCreateWithIncorrectCredentialsJson = testUtils.readFileContent(FIXTURES_PATH
                 + "userToCreateIncorrectCredentials.json");
     }
 
     @Test
     void testCreateUserWithCorrectCredentials() throws Exception {
-        MockHttpServletResponse resp = mockMvc
+        MockHttpServletResponse resp = testUtils
                 .perform(
-                            post(BASE_API_URL + USERS)
+                            post(BASE_API_URL + USERS_CONTROLLER_PATH)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(userToCreateJson)
                 ).andReturn().getResponse();
@@ -66,14 +64,14 @@ class UsersControllerTest {
         assertThat(response).contains("ivan@google.com");
         assertThat(response).contains("Ivan");
         assertThat(response).contains("Petrov");
-        assertThat(userRepository.findByEmail("ivan@google.com")).isNotNull();
+        assertThat(userRepository.findUserByEmail("ivan@google.com")).isNotNull();
     }
 
     @Test
     void testCreateUserWithIncorrectCredentials() throws Exception {
-        MockHttpServletResponse resp = mockMvc
+        MockHttpServletResponse resp = testUtils
                 .perform(
-                                post(BASE_API_URL + USERS)
+                                post(BASE_API_URL + USERS_CONTROLLER_PATH)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(userToCreateWithIncorrectCredentialsJson)
                 ).andReturn().getResponse();
@@ -86,29 +84,45 @@ class UsersControllerTest {
         assertThat(response).contains("First name must contains at least one character");
         assertThat(response).contains("Last name must contains at least one character");
         assertThat(response).contains("Password must contains at least 3 characters.");
-        assertThat(userRepository.findByEmail("ivam")).isEmpty();
+        assertThat(userRepository.findUserByEmail("ivam")).isEmpty();
     }
 
     @Test
     void testGetUserById() throws Exception {
-        MockHttpServletResponse resp = mockMvc
-                .perform(
-                    get(BASE_API_URL + USERS + "/1")
-                ).andReturn().getResponse();
+        final User expectedUser = userRepository.findAll().get(0);
+
+        MockHttpServletResponse resp = testUtils.perform(
+                get(BASE_API_URL + USERS_CONTROLLER_PATH + ID, expectedUser.getId()),
+                expectedUser.getEmail()
+        ).andReturn().getResponse();
 
         String response = resp.getContentAsString();
 
         assertThat(resp.getStatus()).isEqualTo(200);
-        assertThat(response).contains("Alex");
-        assertThat(response).contains("Testov");
+        assertThat(response).contains(expectedUser.getFirstName());
+        assertThat(response).contains(expectedUser.getLastName());
         assertThat(response).doesNotContain("password");
     }
 
     @Test
+    void testGetUserByIdWithoutAuthentication() throws Exception {
+        final User expectedUser = userRepository.findAll().get(0);
+
+        MockHttpServletResponse resp = testUtils.perform(
+                get(BASE_API_URL + USERS_CONTROLLER_PATH + ID, expectedUser.getId())
+        ).andReturn().getResponse();
+
+        assertThat(resp.getStatus()).isEqualTo(401);
+    }
+
+    @Test
     void testGetUserByNonExistentId() throws Exception {
-        MockHttpServletResponse resp = mockMvc
+        final User expectedUser = userRepository.findAll().get(0);
+
+        MockHttpServletResponse resp = testUtils
                 .perform(
-                        get(BASE_API_URL + USERS + "/20")
+                        get(BASE_API_URL + USERS_CONTROLLER_PATH + ID, "568"),
+                        expectedUser.getEmail()
                 ).andReturn().getResponse();
 
         String response = resp.getContentAsString();
@@ -119,9 +133,9 @@ class UsersControllerTest {
 
     @Test
     void testGetAllUsers() throws Exception {
-        MockHttpServletResponse resp = mockMvc
+        MockHttpServletResponse resp = testUtils
                 .perform(
-                    get(BASE_API_URL + USERS)
+                    get(BASE_API_URL + USERS_CONTROLLER_PATH)
                 ).andReturn().getResponse();
 
         String response = resp.getContentAsString();
@@ -133,16 +147,19 @@ class UsersControllerTest {
 
     @Test
     void testChangeUserData() throws Exception {
-        MockHttpServletResponse resp = mockMvc
+        final User expectedUser = userRepository.findAll().get(0);
+
+        MockHttpServletResponse resp = testUtils
                 .perform(
-                        patch(BASE_API_URL + USERS + "/1")
+                        put(BASE_API_URL + USERS_CONTROLLER_PATH + ID, expectedUser.getId())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(userToPatchJson)
+                        .content(userToPatchJson),
+                        expectedUser.getEmail()
                 ).andReturn().getResponse();
 
         String response = resp.getContentAsString();
 
-        User updatedUser = userRepository.getById(1L);
+        User updatedUser = userRepository.getById(expectedUser.getId());
 
         assertThat(resp.getStatus()).isEqualTo(200);
         assertThat(resp.getContentType()).isEqualTo(MediaType.APPLICATION_JSON.toString());
@@ -155,12 +172,35 @@ class UsersControllerTest {
     }
 
     @Test
+    void testChangeAnotherUserData() throws Exception {
+        final User expectedUser = userRepository.findAll().get(0);
+        final Long existentUserInDbId = 30L;
+
+        MockHttpServletResponse resp = testUtils.perform(
+                put(BASE_API_URL + USERS_CONTROLLER_PATH + ID, existentUserInDbId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(userToPatchJson),
+                expectedUser.getEmail()
+        ).andReturn().getResponse();
+
+        final User dbUser = userRepository.getById(existentUserInDbId);
+
+        assertThat(resp.getStatus()).isEqualTo(401);
+        assertThat(dbUser.getFirstName()).isEqualTo("fname_to_change");
+        assertThat(dbUser.getLastName()).isEqualTo("lname_to_change");
+        assertThat(dbUser.getEmail()).isEqualTo("change@mail.com");
+    }
+
+    @Test
     void testChangeUserDataWithInvalidCredentials() throws Exception {
-        MockHttpServletResponse resp = mockMvc
+        final User expectedUser = userRepository.findAll().get(0);
+
+        MockHttpServletResponse resp = testUtils
                 .perform(
-                            patch(BASE_API_URL + USERS + "/2")
+                            put(BASE_API_URL + USERS_CONTROLLER_PATH + ID, expectedUser.getId())
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(userToCreateWithIncorrectCredentialsJson)
+                            .content(userToCreateWithIncorrectCredentialsJson),
+                        expectedUser.getEmail()
                 ).andReturn().getResponse();
 
         String response = resp.getContentAsString();
@@ -171,26 +211,38 @@ class UsersControllerTest {
         assertThat(response).contains("First name must contains at least one character");
         assertThat(response).contains("Last name must contains at least one character");
         assertThat(response).contains("Password must contains at least 3 characters.");
-        assertThat(userRepository.findByEmail("ivam")).isEmpty();
+        assertThat(userRepository.findUserByEmail("ivam")).isEmpty();
     }
 
     @Test
     void testDeleteUser() throws Exception {
-        MockHttpServletResponse resp = mockMvc
+        final User expectedUser = userRepository.findAll().get(0);
+
+        MockHttpServletResponse resp = testUtils
                 .perform(
-                        delete(BASE_API_URL + USERS + "/1")
+                        delete(BASE_API_URL + USERS_CONTROLLER_PATH + ID, expectedUser.getId()),
+                        expectedUser.getEmail()
                 ).andReturn().getResponse();
 
         String response = resp.getContentAsString();
 
         assertThat(resp.getStatus()).isEqualTo(200);
         assertThat(response).contains("OK");
-        assertThat(userRepository.findById(1L)).isEmpty();
+        assertThat(userRepository.findById(expectedUser.getId())).isEmpty();
     }
 
+    @Test
+    void testDeleteAnotherUser() throws Exception {
+        final User expectedUser = userRepository.findAll().get(0);
+        final Long existentUserInDbId = 30L;
 
-    private static String readFileContent(String path) throws IOException {
-        Path resultPath = Paths.get(path).toAbsolutePath().normalize();
-        return Files.readString(resultPath);
+        MockHttpServletResponse resp = testUtils.perform(
+                delete(BASE_API_URL + USERS_CONTROLLER_PATH + ID, existentUserInDbId),
+                expectedUser.getEmail()
+        ).andReturn().getResponse();
+
+        assertThat(resp.getStatus()).isEqualTo(401);
+        assertThat(userRepository.findById(existentUserInDbId)).isNotEmpty();
     }
+
 }

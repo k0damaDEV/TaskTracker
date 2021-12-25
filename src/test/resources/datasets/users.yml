@@ -1,12 +1,12 @@
 users:
-  - id: 1
+  - id: 20
     first_name: Alex
     last_name: Testov
     email: testmail@gmail.com
     password: $2a$12$lP1HdpYa4yT./wnilPzf0OoxaVHJunEkkxw4SwkYL5obPjq.fG8Xy
     created_at: 2021-12-20T12:45:17.173Z
 
-  - id: 2
+  - id: 30
     first_name: fname_to_change
     last_name: lname_to_change
     email: change@mail.com

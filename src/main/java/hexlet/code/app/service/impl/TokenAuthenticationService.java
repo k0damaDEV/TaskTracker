@@ -1,11 +1,12 @@
 package hexlet.code.app.service.impl;
 
-import hexlet.code.app.exceptions.UserNotFoundException;
 import hexlet.code.app.model.User;
 import hexlet.code.app.repository.UserRepository;
 import hexlet.code.app.service.TokenService;
 import hexlet.code.app.service.UserAuthenticationService;
 import lombok.AllArgsConstructor;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -15,16 +16,18 @@ import java.util.Optional;
 @AllArgsConstructor
 public class TokenAuthenticationService implements UserAuthenticationService {
 
-    private TokenService tokenService;
+    private final TokenService tokenService;
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public String login(String username, String password) {
         return userRepository.findUserByEmail(username)
-                .filter(user -> user.getPassword().equals(password))
+                .filter(user -> passwordEncoder.matches(password, user.getPassword()))
                 .map(user -> tokenService.expiring(Map.of("username", username)))
-                .orElseThrow(() -> new UserNotFoundException("Invalid email and/or password"));
+                .orElseThrow(() -> new BadCredentialsException("Invalid email and/or password"));
     }
 
     @Override
