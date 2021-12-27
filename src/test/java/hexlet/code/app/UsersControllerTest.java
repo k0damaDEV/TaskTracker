@@ -13,14 +13,13 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
+import javax.transaction.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-
-import javax.transaction.Transactional;
-
 import static hexlet.code.app.controller.UsersController.USERS_CONTROLLER_PATH;
 import static hexlet.code.app.controller.UsersController.ID;
+import static hexlet.code.app.utils.TestUtils.BASE_API_URL;
 
 @Transactional
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -33,7 +32,6 @@ class UsersControllerTest {
     private static String userToCreateJson;
     private static String userToPatchJson;
     private static String userToCreateWithIncorrectCredentialsJson;
-    private static final String BASE_API_URL = "/api";
 
     @Autowired
     private UserRepository userRepository;
@@ -49,7 +47,7 @@ class UsersControllerTest {
     }
 
     @Test
-    void testCreateUserWithCorrectCredentials() throws Exception {
+    void testCreateUserWithCorrectCredentials() throws Exception {  // todo refactor
         MockHttpServletResponse resp = testUtils
                 .perform(
                             post(BASE_API_URL + USERS_CONTROLLER_PATH)

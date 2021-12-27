@@ -30,6 +30,7 @@ public class TaskStatusServiceImpl implements TaskStatusService {
                 .orElseThrow(() -> new NotFoundException("Task status with such ID not found"));
 
         dbTask.setName(taskStatusDto.getName());
+
         return taskStatusRepository.save(dbTask);
     }
 }
