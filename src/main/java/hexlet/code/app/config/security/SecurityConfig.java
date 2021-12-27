@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -36,7 +37,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         this.publicUrls = new OrRequestMatcher(
                 new AntPathRequestMatcher(baseUrl + "/login", HttpMethod.POST.toString()),
                 new AntPathRequestMatcher(baseUrl + "/users", HttpMethod.POST.toString()),
-                new AntPathRequestMatcher(baseUrl + "/users", HttpMethod.GET.toString())
+                new AntPathRequestMatcher(baseUrl + "/users", HttpMethod.GET.toString()),
+                new AntPathRequestMatcher("/", HttpMethod.GET.toString())
         );
         this.protectedUrls = new NegatedRequestMatcher(publicUrls);
     }

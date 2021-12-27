@@ -17,6 +17,10 @@ bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
 
+### FRONTEND ###
+frontend/build
+frontend/node_modules
+
 ### BASE ###
 *.mv.db
 *.trace.db
