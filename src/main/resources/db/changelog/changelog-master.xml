@@ -15,4 +15,13 @@
     <changeSet author="noname (generated)" id="1640261305894-2">
         <addUniqueConstraint columnNames="email" constraintName="UK6dotkott2kjsp8vw4d0m25fb7" tableName="users"/>
     </changeSet>
+    <changeSet author="noname (generated)" id="1640610823875-1">
+        <createTable tableName="task_status">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="task_statusPK"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP"/>
+            <column name="name" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
 </databaseChangeLog>

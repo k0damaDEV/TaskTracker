@@ -20,6 +20,10 @@ import org.springframework.security.web.util.matcher.NegatedRequestMatcher;
 import org.springframework.security.web.util.matcher.OrRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
+import static hexlet.code.app.controller.UsersController.USERS_CONTROLLER_PATH;
+import static hexlet.code.app.controller.AuthController.LOGIN_CONTROLLER_PATH;
+import static hexlet.code.app.controller.TaskStatusController.TASK_STATUS_CONTROLLER_PATH;
+
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -35,9 +39,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                           @Lazy final TokenAuthenticationProvider tokenAuthenticationProvider) {
         this.authenticationProvider = tokenAuthenticationProvider;
         this.publicUrls = new OrRequestMatcher(
-                new AntPathRequestMatcher(baseUrl + "/login", HttpMethod.POST.toString()),
-                new AntPathRequestMatcher(baseUrl + "/users", HttpMethod.POST.toString()),
-                new AntPathRequestMatcher(baseUrl + "/users", HttpMethod.GET.toString()),
+                new AntPathRequestMatcher(baseUrl + LOGIN_CONTROLLER_PATH, HttpMethod.POST.toString()),
+                new AntPathRequestMatcher(baseUrl + USERS_CONTROLLER_PATH, HttpMethod.POST.toString()),
+                new AntPathRequestMatcher(baseUrl + USERS_CONTROLLER_PATH, HttpMethod.GET.toString()),
+                new AntPathRequestMatcher(baseUrl + TASK_STATUS_CONTROLLER_PATH, HttpMethod.GET.toString()),
                 new NegatedRequestMatcher(new AntPathRequestMatcher(baseUrl + "/**"))
         );
         this.protectedUrls = new NegatedRequestMatcher(publicUrls);

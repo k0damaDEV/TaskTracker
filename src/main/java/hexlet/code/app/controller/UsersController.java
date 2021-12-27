@@ -1,7 +1,7 @@
 package hexlet.code.app.controller;
 
 import hexlet.code.app.dto.UserDto;
-import hexlet.code.app.exceptions.UserNotFoundException;
+import hexlet.code.app.exceptions.NotFoundException;
 import hexlet.code.app.model.User;
 import hexlet.code.app.repository.UserRepository;
 import hexlet.code.app.service.UserService;
@@ -42,7 +42,7 @@ public class UsersController {
     @GetMapping(ID)
     public User getUserById(@PathVariable(name = "id") Long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException("User with such ID not found"));
+                .orElseThrow(() -> new NotFoundException("User with such ID not found"));
     }
 
     @PutMapping(ID)
