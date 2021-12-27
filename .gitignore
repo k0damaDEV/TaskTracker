@@ -20,6 +20,7 @@ bin/
 ### FRONTEND ###
 frontend/build
 frontend/node_modules
+/node
 
 ### BASE ###
 *.mv.db
