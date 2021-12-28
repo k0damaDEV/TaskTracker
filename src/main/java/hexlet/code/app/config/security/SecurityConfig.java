@@ -24,6 +24,7 @@ import static hexlet.code.app.controller.UsersController.ID;
 import static hexlet.code.app.controller.UsersController.USERS_CONTROLLER_PATH;
 import static hexlet.code.app.controller.AuthController.LOGIN_CONTROLLER_PATH;
 import static hexlet.code.app.controller.TaskStatusController.TASK_STATUS_CONTROLLER_PATH;
+import static hexlet.code.app.controller.TaskController.TASK_CONTROLLER_PATH;
 
 @Configuration
 @EnableWebSecurity
@@ -44,6 +45,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 new AntPathRequestMatcher(baseUrl + USERS_CONTROLLER_PATH, HttpMethod.POST.toString()),
                 new AntPathRequestMatcher(baseUrl + USERS_CONTROLLER_PATH, HttpMethod.GET.toString()),
                 new AntPathRequestMatcher(baseUrl + TASK_STATUS_CONTROLLER_PATH, HttpMethod.GET.toString()),
+                new AntPathRequestMatcher(baseUrl + TASK_STATUS_CONTROLLER_PATH + ID, HttpMethod.GET.toString()),
+                new AntPathRequestMatcher(baseUrl + TASK_CONTROLLER_PATH, HttpMethod.GET.toString()),
                 new AntPathRequestMatcher(baseUrl + TASK_STATUS_CONTROLLER_PATH + ID, HttpMethod.GET.toString()),
                 new NegatedRequestMatcher(new AntPathRequestMatcher(baseUrl + "/**"))
         );

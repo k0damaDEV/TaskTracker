@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 
 @Service
-@Transactional
 @AllArgsConstructor
 public class TaskStatusServiceImpl implements TaskStatusService {
 
