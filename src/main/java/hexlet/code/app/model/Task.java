@@ -28,13 +28,16 @@ public class Task {
     @ManyToOne
     private TaskStatus taskStatus;
     @ManyToOne
+    @JoinColumn(name = "authorId")
     private User author;
     @ManyToOne
     @Nullable
+    @JoinColumn(name = "executorId")
     private User executor;
     @JoinTable(name = "TASK_LABELS")
+    @Nullable
     @ManyToMany
-    List<Label> labelList;
+    List<Label> labels;
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "createdAt")

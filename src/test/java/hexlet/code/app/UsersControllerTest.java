@@ -20,6 +20,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static hexlet.code.app.controller.UsersController.USERS_CONTROLLER_PATH;
 import static hexlet.code.app.controller.UsersController.ID;
 import static hexlet.code.app.utils.TestUtils.BASE_API_URL;
+import static hexlet.code.app.utils.TestUtils.FIXTURES_PATH;
 
 @Transactional
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -28,7 +29,6 @@ import static hexlet.code.app.utils.TestUtils.BASE_API_URL;
 @DataSet("test-data.yml")
 @AutoConfigureMockMvc
 class UsersControllerTest {
-    private static final String FIXTURES_PATH = "src/test/resources/fixtures/";
     private static String userToCreateJson;
     private static String userToPatchJson;
     private static String userToCreateWithIncorrectCredentialsJson;
@@ -47,7 +47,7 @@ class UsersControllerTest {
     }
 
     @Test
-    void testCreateUserWithCorrectCredentials() throws Exception {  // todo refactor
+    void testCreateUserWithCorrectCredentials() throws Exception {
         MockHttpServletResponse resp = testUtils
                 .perform(
                             post(BASE_API_URL + USERS_CONTROLLER_PATH)

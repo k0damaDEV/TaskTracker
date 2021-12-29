@@ -2,7 +2,6 @@ package hexlet.code.app;
 
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.junit5.api.DBRider;
-import hexlet.code.app.model.TaskStatus;
 import hexlet.code.app.model.User;
 import hexlet.code.app.repository.TaskStatusRepository;
 import hexlet.code.app.repository.UserRepository;
@@ -15,7 +14,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
-
 import javax.transaction.Transactional;
 import java.io.IOException;
 
@@ -24,6 +22,7 @@ import static hexlet.code.app.controller.TaskStatusController.TASK_STATUS_CONTRO
 import static hexlet.code.app.utils.TestUtils.BASE_API_URL;
 import static hexlet.code.app.controller.UsersController.ID;
 import static org.assertj.core.api.Assertions.assertThat;
+import static hexlet.code.app.utils.TestUtils.FIXTURES_PATH;
 
 
 @SpringBootTest
@@ -47,24 +46,22 @@ public class TaskStatusControllerTest {
     @BeforeAll
     void init() throws IOException {
         taskStatusToChangeJson = testUtils
-                .readFileContent("src/test/resources/fixtures/taskStatusToChange.json");
+                .readFileContent(FIXTURES_PATH + "taskStatusToChange.json");
         taskStatusToCreateInvalidJson = testUtils
-                .readFileContent("src/test/resources/fixtures/taskStatusInvalidCreate.json");
+                .readFileContent( FIXTURES_PATH + "taskStatusInvalidCreate.json");
     }
 
     @Test
     void testCreateTaskStatus() throws Exception {
-        assertThat(taskStatusRepository.findAll().size()).isEqualTo(1);
+        assertThat(taskStatusRepository.findAll().size()).isEqualTo(3);
         testUtils.regDefaultTaskStatus();
-        assertThat(taskStatusRepository.findAll().size()).isEqualTo(2);
+        assertThat(taskStatusRepository.findAll().size()).isEqualTo(4);
     }
 
     @Test
     void testGetTaskStatusById() throws Exception {
-        TaskStatus taskStatus = testUtils.regDefaultTaskStatus();
-
         MockHttpServletResponse resp = testUtils.perform(
-                get(BASE_API_URL + TASK_STATUS_CONTROLLER_PATH + ID, taskStatus.getId())
+                get(BASE_API_URL + TASK_STATUS_CONTROLLER_PATH + ID, 1)
         ).andReturn().getResponse();
 
         String body = resp.getContentAsString();
@@ -73,6 +70,7 @@ public class TaskStatusControllerTest {
         assertThat(body).contains("name");
         assertThat(body).contains("id");
         assertThat(body).contains("createdAt");
+        assertThat(body).contains("New");
     }
 
     @Test
@@ -86,11 +84,10 @@ public class TaskStatusControllerTest {
 
     @Test
     void testChangeTaskStatus() throws Exception {
-        TaskStatus taskStatus = testUtils.regDefaultTaskStatus();
         User user = userRepository.findAll().get(0);
 
         MockHttpServletResponse resp = testUtils.perform(
-                put(BASE_API_URL + TASK_STATUS_CONTROLLER_PATH + ID, taskStatus.getId())
+                put(BASE_API_URL + TASK_STATUS_CONTROLLER_PATH + ID, 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(taskStatusToChangeJson),
                 user.getEmail()
@@ -104,18 +101,17 @@ public class TaskStatusControllerTest {
 
     @Test
     void testDeleteTaskStatus() throws Exception {
-        testUtils.regDefaultTaskStatus();
-        assertThat(taskStatusRepository.findAll().size()).isEqualTo(2);
+        assertThat(taskStatusRepository.findAll().size()).isEqualTo(3);
 
         User user = userRepository.findAll().get(0);
 
         MockHttpServletResponse resp = testUtils.perform(
-                delete(BASE_API_URL + TASK_STATUS_CONTROLLER_PATH + ID, 1),
+                delete(BASE_API_URL + TASK_STATUS_CONTROLLER_PATH + ID, 3),
                 user.getEmail()
         ).andReturn().getResponse();
 
         assertThat(resp.getStatus()).isEqualTo(200);
-        assertThat(taskStatusRepository.findAll().size()).isEqualTo(1);
+        assertThat(taskStatusRepository.findAll().size()).isEqualTo(2);
     }
 
     @Test
@@ -143,7 +139,7 @@ public class TaskStatusControllerTest {
         ).andReturn().getResponse();
 
         assertThat(resp.getStatus()).isEqualTo(401);
-        assertThat(taskStatusRepository.findAll().size()).isEqualTo(1);
+        assertThat(taskStatusRepository.findAll().size()).isEqualTo(3);
     }
 
     @Test
@@ -162,13 +158,11 @@ public class TaskStatusControllerTest {
 
     @Test
     void testDeleteTaskStatusWithoutAuthorization() throws Exception {
-        testUtils.regDefaultTaskStatus();
-
         MockHttpServletResponse resp = testUtils.perform(
                 delete(BASE_API_URL + TASK_STATUS_CONTROLLER_PATH + ID, 1)
         ).andReturn().getResponse();
 
         assertThat(resp.getStatus()).isEqualTo(401);
-        assertThat(taskStatusRepository.findAll().size()).isEqualTo(2);
+        assertThat(taskStatusRepository.findAll().size()).isEqualTo(3);
     }
 }

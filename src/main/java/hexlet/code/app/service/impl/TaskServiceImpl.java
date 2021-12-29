@@ -38,7 +38,7 @@ public class TaskServiceImpl implements TaskService {
         );
 
         if (taskCreationDto.getLabelIds() != null) {
-            task.setLabelList(taskCreationDto.getLabelIds().stream().map(x -> labelRepository.findById(x)
+            task.setLabels(taskCreationDto.getLabelIds().stream().map(x -> labelRepository.findById(x)
                             .orElseThrow(() -> new NotFoundException("Label with such ID not found")))
                     .collect(Collectors.toList()));
         }
@@ -58,7 +58,7 @@ public class TaskServiceImpl implements TaskService {
                 .orElseThrow(() -> new NotFoundException("Task status with such ID not found.")));
 
         if (taskCreationDto.getLabelIds() != null) {
-            task.setLabelList(taskCreationDto.getLabelIds().stream().map(x -> labelRepository.findById(x)
+            task.setLabels(taskCreationDto.getLabelIds().stream().map(x -> labelRepository.findById(x)
                             .orElseThrow(() -> new NotFoundException("Label with such ID not found.")))
                     .collect(Collectors.toList()));
         }

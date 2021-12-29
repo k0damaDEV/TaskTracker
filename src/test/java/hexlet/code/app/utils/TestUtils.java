@@ -19,8 +19,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-
-import javax.transaction.Transactional;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -31,7 +29,6 @@ import static hexlet.code.app.controller.TaskStatusController.TASK_STATUS_CONTRO
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static hexlet.code.app.controller.TaskController.TASK_CONTROLLER_PATH;
 import static hexlet.code.app.controller.LabelController.LABEL_CONTROLLER_PATH;
-
 
 @Component
 @DBRider
@@ -52,9 +49,10 @@ public class TestUtils {
     private LabelRepository labelRepository;
 
     public static final String BASE_API_URL = "/api";
+    public static final String FIXTURES_PATH = "src/test/resources/fixtures/";
 
     public TaskStatus regDefaultTaskStatus() throws Exception {
-        String taskStatusCreateJson = readFileContent("src/test/resources/fixtures/taskStatusCreateJson.json");
+        String taskStatusCreateJson = readFileContent(FIXTURES_PATH + "taskStatusCreateJson.json");
         final User user = userRepository.findAll().get(0);
         MockHttpServletResponse resp = perform(
                 post(BASE_API_URL + TASK_STATUS_CONTROLLER_PATH)
@@ -67,7 +65,7 @@ public class TestUtils {
     }
 
     public Label regDefaultLabel() throws Exception {
-        String labelCreateJson = readFileContent("src/test/resources/fixtures/labelCreate.json");
+        String labelCreateJson = readFileContent(FIXTURES_PATH + "labelCreate.json");
         final User user = userRepository.findAll().get(0);
 
         MockHttpServletResponse resp = perform(
@@ -81,7 +79,7 @@ public class TestUtils {
     }
 
     public Task regDefaultTask() throws Exception {
-        String taskCreateJson = readFileContent("src/test/resources/fixtures/taskCreate.json");
+        String taskCreateJson = readFileContent(FIXTURES_PATH + "taskCreate.json");
         final User user = userRepository.findAll().get(0);
 
         MockHttpServletResponse resp = perform(

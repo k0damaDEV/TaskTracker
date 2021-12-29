@@ -3,6 +3,28 @@ task_status:
     name: New
     created_at: 2021-12-20T12:45:17.173Z
 
+  - id: 2
+    name: Old
+    created_at: 2021-12-20T12:45:17.173Z
+
+  - id: 3
+    name: ToDelete
+    created_at: 2021-12-20T12:45:17.173Z
+
+label:
+  - id: 1
+    name: To Do
+    created_at: 2021-12-20T12:45:17.173Z
+
+  - id: 2
+    name: Doing
+    created_at: 2021-12-20T12:45:17.173Z
+
+  - id: 3
+    name: Done
+    created_at: 2021-12-20T12:45:17.173Z
+
+
 users:
   - id: 20
     first_name: Alex
@@ -17,3 +39,34 @@ users:
     email: change@mail.com
     password: $2a$12$lP1HdpYa4yT./wnilPzf0OoxaVHJunEkkxw4SwkYL5obPjq.fG8Xy
     created_at: 2021-12-20T12:45:17.173Z
+
+  - id: 40
+    first_name: TaskAuthorName
+    last_name: TaskAuthorLname
+    email: authormail@mail.com
+    password: $2a$12$lP1HdpYa4yT./wnilPzf0OoxaVHJunEkkxw4SwkYL5obPjq.fG8Xy
+    created_at: 2021-12-20T12:45:17.173Z
+
+  - id: 50
+    first_name: TaskExecutorName
+    last_name: TaskExecutorLname
+    email: executormail@mail.ru
+    password: $2a$12$lP1HdpYa4yT./wnilPzf0OoxaVHJunEkkxw4SwkYL5obPjq.fG8Xy
+    created_at: 2021-12-20T12:45:17.173Z
+
+task:
+  - id: 1
+    created_at: 2021-12-30 00:41:43.964000
+    description: null
+    name: First Test Task
+    author_id: 20
+    executor_id: 30
+    task_status_id: 1
+    
+  - id: 2
+    created_at: 2021-12-30 00:41:43.964000
+    description: null
+    name: Second Test Task
+    author_id: 40
+    executor_id: 50
+    task_status_id: 2
