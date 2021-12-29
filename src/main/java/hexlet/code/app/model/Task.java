@@ -9,6 +9,7 @@ import org.springframework.lang.Nullable;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -18,8 +19,10 @@ public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name = "name")
     private String name;
     @Nullable
+    @Column(name = "description")
     private String description;
     @NotNull
     @ManyToOne
@@ -29,8 +32,12 @@ public class Task {
     @ManyToOne
     @Nullable
     private User executor;
+    @JoinTable(name = "TASK_LABELS")
+    @ManyToMany
+    List<Label> labelList;
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "createdAt")
     private Date createdAt;
 
     public Task(String name, @Nullable String description, TaskStatus taskStatus, User author, @Nullable User executor) {

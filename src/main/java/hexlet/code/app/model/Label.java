@@ -6,18 +6,16 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Entity
+@NoArgsConstructor
 @Getter
 @Setter
-@NoArgsConstructor
-public class TaskStatus {
+public class Label {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotNull
     @Column(name = "name")
     private String name;
     @CreationTimestamp
@@ -25,7 +23,7 @@ public class TaskStatus {
     @Column(name = "createdAt")
     private Date createdAt;
 
-    public TaskStatus(String name) {
+    public Label(String name) {
         this.name = name;
     }
 }

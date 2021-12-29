@@ -2,9 +2,11 @@ package hexlet.code.app.utils;
 
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.junit5.api.DBRider;
+import hexlet.code.app.model.Label;
 import hexlet.code.app.model.Task;
 import hexlet.code.app.model.TaskStatus;
 import hexlet.code.app.model.User;
+import hexlet.code.app.repository.LabelRepository;
 import hexlet.code.app.repository.TaskRepository;
 import hexlet.code.app.repository.TaskStatusRepository;
 import hexlet.code.app.repository.UserRepository;
@@ -28,6 +30,7 @@ import java.util.Map;
 import static hexlet.code.app.controller.TaskStatusController.TASK_STATUS_CONTROLLER_PATH;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static hexlet.code.app.controller.TaskController.TASK_CONTROLLER_PATH;
+import static hexlet.code.app.controller.LabelController.LABEL_CONTROLLER_PATH;
 
 
 @Component
@@ -45,6 +48,8 @@ public class TestUtils {
     private TaskStatusRepository taskStatusRepository;
     @Autowired
     private TaskRepository taskRepository;
+    @Autowired
+    private LabelRepository labelRepository;
 
     public static final String BASE_API_URL = "/api";
 
@@ -59,6 +64,20 @@ public class TestUtils {
         ).andReturn().getResponse();
 
         return taskStatusRepository.findAll().get(0);
+    }
+
+    public Label regDefaultLabel() throws Exception {
+        String labelCreateJson = readFileContent("src/test/resources/fixtures/labelCreate.json");
+        final User user = userRepository.findAll().get(0);
+
+        MockHttpServletResponse resp = perform(
+                post(BASE_API_URL + LABEL_CONTROLLER_PATH)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(labelCreateJson),
+                user.getEmail()
+        ).andReturn().getResponse();
+
+        return labelRepository.findAll().get(0);
     }
 
     public Task regDefaultTask() throws Exception {

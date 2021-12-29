@@ -1,5 +1,6 @@
 package hexlet.code.app.dto;
 
+import hexlet.code.app.model.Label;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,6 +8,7 @@ import org.springframework.lang.Nullable;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -20,4 +22,6 @@ public class TaskCreationDto {
     private Long executorId;
     @NotNull
     private Long taskStatusId;
+    @Nullable
+    private List<Long> labelIds;
 }

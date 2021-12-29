@@ -20,17 +20,21 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NotNull
+    @Column(name = "firstName")
     private String firstName;
     @NotNull
+    @Column(name = "lastName")
     private String lastName;
     @NotNull
-    @Column(unique = true)
+    @Column(unique = true, name = "email")
     private String email;
     @NotNull
     @JsonIgnore
+    @Column(name = "password")
     private String password;
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "createdAt")
     private Date createdAt;
 
     public User(String firstName, String lastName, String email, String password) {
