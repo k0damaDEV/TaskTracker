@@ -25,7 +25,7 @@ import static hexlet.code.app.utils.TestUtils.BASE_API_URL;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @SpringBootTest
 @DBRider
-@DataSet("users.yml")
+@DataSet("test-data.yml")
 @AutoConfigureMockMvc
 class UsersControllerTest {
     private static final String FIXTURES_PATH = "src/test/resources/fixtures/";

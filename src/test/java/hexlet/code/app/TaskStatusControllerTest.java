@@ -30,7 +30,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Transactional
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @DBRider
-@DataSet("users.yml")
+@DataSet("test-data.yml")
 @AutoConfigureMockMvc
 public class TaskStatusControllerTest {
 
@@ -54,9 +54,9 @@ public class TaskStatusControllerTest {
 
     @Test
     void testCreateTaskStatus() throws Exception {
-        assertThat(taskStatusRepository.findAll().size()).isEqualTo(0);
-        testUtils.regDefaultTaskStatus();
         assertThat(taskStatusRepository.findAll().size()).isEqualTo(1);
+        testUtils.regDefaultTaskStatus();
+        assertThat(taskStatusRepository.findAll().size()).isEqualTo(2);
     }
 
     @Test
@@ -105,7 +105,7 @@ public class TaskStatusControllerTest {
     @Test
     void testDeleteTaskStatus() throws Exception {
         testUtils.regDefaultTaskStatus();
-        assertThat(taskStatusRepository.findAll().size()).isEqualTo(1);
+        assertThat(taskStatusRepository.findAll().size()).isEqualTo(2);
 
         User user = userRepository.findAll().get(0);
 
@@ -115,7 +115,7 @@ public class TaskStatusControllerTest {
         ).andReturn().getResponse();
 
         assertThat(resp.getStatus()).isEqualTo(200);
-        assertThat(taskStatusRepository.findAll().size()).isEqualTo(0);
+        assertThat(taskStatusRepository.findAll().size()).isEqualTo(1);
     }
 
     @Test
@@ -143,7 +143,7 @@ public class TaskStatusControllerTest {
         ).andReturn().getResponse();
 
         assertThat(resp.getStatus()).isEqualTo(401);
-        assertThat(taskStatusRepository.findAll().size()).isEqualTo(0);
+        assertThat(taskStatusRepository.findAll().size()).isEqualTo(1);
     }
 
     @Test
@@ -169,6 +169,6 @@ public class TaskStatusControllerTest {
         ).andReturn().getResponse();
 
         assertThat(resp.getStatus()).isEqualTo(401);
-        assertThat(taskStatusRepository.findAll().size()).isEqualTo(1);
+        assertThat(taskStatusRepository.findAll().size()).isEqualTo(2);
     }
 }

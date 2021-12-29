@@ -1,0 +1,6 @@
+{
+  "name": "New Task",
+  "description": "New task description",
+  "executorId": 20,
+  "taskStatusId": 1
+}

@@ -2,8 +2,10 @@ package hexlet.code.app.utils;
 
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.junit5.api.DBRider;
+import hexlet.code.app.model.Task;
 import hexlet.code.app.model.TaskStatus;
 import hexlet.code.app.model.User;
+import hexlet.code.app.repository.TaskRepository;
 import hexlet.code.app.repository.TaskStatusRepository;
 import hexlet.code.app.repository.UserRepository;
 import hexlet.code.app.service.impl.JWTTokenService;
@@ -16,7 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
-
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -25,11 +27,12 @@ import java.util.Map;
 
 import static hexlet.code.app.controller.TaskStatusController.TASK_STATUS_CONTROLLER_PATH;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static hexlet.code.app.controller.TaskController.TASK_CONTROLLER_PATH;
 
 
 @Component
 @DBRider
-@DataSet("users.yml")
+@DataSet("test-data.yml")
 public class TestUtils {
 
     @Autowired
@@ -40,6 +43,8 @@ public class TestUtils {
     private UserRepository userRepository;
     @Autowired
     private TaskStatusRepository taskStatusRepository;
+    @Autowired
+    private TaskRepository taskRepository;
 
     public static final String BASE_API_URL = "/api";
 
@@ -54,6 +59,20 @@ public class TestUtils {
         ).andReturn().getResponse();
 
         return taskStatusRepository.findAll().get(0);
+    }
+
+    public Task regDefaultTask() throws Exception {
+        String taskCreateJson = readFileContent("src/test/resources/fixtures/taskCreate.json");
+        final User user = userRepository.findAll().get(0);
+
+        MockHttpServletResponse resp = perform(
+                post(BASE_API_URL + TASK_CONTROLLER_PATH)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(taskCreateJson),
+                user.getEmail()
+        ).andReturn().getResponse();
+
+        return taskRepository.findAll().get(0);
     }
 
     public ResultActions perform(final MockHttpServletRequestBuilder request) throws Exception {
