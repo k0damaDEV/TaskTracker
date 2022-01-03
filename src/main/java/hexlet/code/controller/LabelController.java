@@ -9,14 +9,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -35,11 +29,12 @@ public class LabelController {
 
     @Operation(summary = "Create new label")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Label was created"),
+            @ApiResponse(responseCode = "201", description = "Label was created"),
             @ApiResponse(responseCode = "422", description = "Invalid arguments"),
             @ApiResponse(responseCode = "401", description = "Unauthorized")
     })
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public Label createNewLabel(@Valid @RequestBody LabelCreationDto labelCreationDto) {
         return labelService.createNewLabel(labelCreationDto);
     }

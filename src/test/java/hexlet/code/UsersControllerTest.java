@@ -61,7 +61,7 @@ class UsersControllerTest {
 
         String response = resp.getContentAsString();
 
-        assertThat(resp.getStatus()).isEqualTo(200);
+        assertThat(resp.getStatus()).isEqualTo(201);
         assertThat(resp.getContentType()).isEqualTo(MediaType.APPLICATION_JSON.toString());
         assertThat(response).contains("ivan@google.com");
         assertThat(response).contains("Ivan");
