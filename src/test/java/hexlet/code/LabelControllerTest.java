@@ -6,8 +6,6 @@ import hexlet.code.model.User;
 import hexlet.code.repository.LabelRepository;
 import hexlet.code.repository.UserRepository;
 import hexlet.code.utils.TestUtils;
-import hexlet.code.controller.LabelController;
-import hexlet.code.controller.UsersController;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -16,11 +14,14 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
 
+import static hexlet.code.controller.LabelController.LABEL_CONTROLLER_PATH;
+import static hexlet.code.controller.UsersController.ID;
+import static hexlet.code.utils.TestUtils.BASE_API_URL;
+import static hexlet.code.utils.TestUtils.FIXTURES_PATH;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -45,14 +46,14 @@ public class LabelControllerTest {
 
     @BeforeAll
     void init() throws IOException {
-        labelToChangeJson = testUtils.readFileContent(TestUtils.FIXTURES_PATH + "labelToChange.json");
+        labelToChangeJson = testUtils.readFileContent(FIXTURES_PATH + "labelToChange.json");
     }
 
     @Test
     void testGetAllLabels() throws Exception {
         User user = userRepository.findAll().get(0);
         MockHttpServletResponse resp = testUtils.perform(
-                MockMvcRequestBuilders.get(TestUtils.BASE_API_URL + LabelController.LABEL_CONTROLLER_PATH),
+                get(BASE_API_URL + LABEL_CONTROLLER_PATH),
                 user.getEmail()
         ).andReturn().getResponse();
 
@@ -71,7 +72,7 @@ public class LabelControllerTest {
         User user = userRepository.findAll().get(0);
 
         MockHttpServletResponse resp = testUtils.perform(
-                MockMvcRequestBuilders.get(TestUtils.BASE_API_URL + LabelController.LABEL_CONTROLLER_PATH + UsersController.ID, 1),
+                get(BASE_API_URL + LABEL_CONTROLLER_PATH + ID, 1),
                 user.getEmail()
         ).andReturn().getResponse();
 
@@ -86,7 +87,7 @@ public class LabelControllerTest {
         User user = userRepository.findAll().get(0);
 
         MockHttpServletResponse resp = testUtils.perform(
-                MockMvcRequestBuilders.put(TestUtils.BASE_API_URL + LabelController.LABEL_CONTROLLER_PATH + UsersController.ID, 1)
+                put(BASE_API_URL + LABEL_CONTROLLER_PATH + ID, 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(labelToChangeJson),
                 user.getEmail()
@@ -104,7 +105,7 @@ public class LabelControllerTest {
         assertThat(labelRepository.findAll().size()).isEqualTo(3);
 
         MockHttpServletResponse resp = testUtils.perform(
-                MockMvcRequestBuilders.delete(TestUtils.BASE_API_URL + LabelController.LABEL_CONTROLLER_PATH + UsersController.ID, 1),
+                delete(BASE_API_URL + LABEL_CONTROLLER_PATH + ID, 1),
                 user.getEmail()
         ).andReturn().getResponse();
 

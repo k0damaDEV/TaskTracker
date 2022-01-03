@@ -7,7 +7,6 @@ import hexlet.code.model.User;
 import hexlet.code.repository.TaskRepository;
 import hexlet.code.repository.UserRepository;
 import hexlet.code.utils.TestUtils;
-import hexlet.code.controller.UsersController;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -20,6 +19,8 @@ import javax.transaction.Transactional;
 import java.io.IOException;
 
 import static hexlet.code.controller.TaskController.TASK_CONTROLLER_PATH;
+import static hexlet.code.controller.UsersController.ID;
+import static hexlet.code.utils.TestUtils.BASE_API_URL;
 import static org.assertj.core.api.Assertions.assertThat;
 import static hexlet.code.controller.TaskController.BY;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -59,7 +60,7 @@ public class TaskControllerTest {
         User user = userRepository.findAll().get(0);
 
         MockHttpServletResponse getResp = testUtils.perform(
-                get(TestUtils.BASE_API_URL + TASK_CONTROLLER_PATH + UsersController.ID, 1),
+                get(BASE_API_URL + TASK_CONTROLLER_PATH + ID, 1),
                 user.getEmail()
         ).andReturn().getResponse();
 
@@ -75,7 +76,7 @@ public class TaskControllerTest {
         Task task = taskRepository.findAll().get(0);
 
         MockHttpServletResponse resp = testUtils.perform(
-                put(TestUtils.BASE_API_URL + TASK_CONTROLLER_PATH + UsersController.ID, task.getId())
+                put(BASE_API_URL + TASK_CONTROLLER_PATH + ID, task.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(taskToPatchJson),
                 user.getEmail()
@@ -90,7 +91,7 @@ public class TaskControllerTest {
     @Test
     void testGetAllTasks() throws Exception {
         MockHttpServletResponse resp = testUtils.perform(
-                get(TestUtils.BASE_API_URL + TASK_CONTROLLER_PATH)
+                get(BASE_API_URL + TASK_CONTROLLER_PATH)
         ).andReturn().getResponse();
 
         assertThat(resp.getStatus()).isEqualTo(200);
@@ -100,7 +101,7 @@ public class TaskControllerTest {
     void testFilterTasks1() throws Exception {
         User user = userRepository.findAll().get(0);
         MockHttpServletResponse resp = testUtils.perform(
-                get(TestUtils.BASE_API_URL + TASK_CONTROLLER_PATH + BY + "?taskStatus=2&executorId=50"),
+                get(BASE_API_URL + TASK_CONTROLLER_PATH + BY + "?taskStatus=2&executorId=50"),
                 user.getEmail()
         ).andReturn().getResponse();
 

@@ -5,7 +5,6 @@ import com.github.database.rider.junit5.api.DBRider;
 import hexlet.code.model.User;
 import hexlet.code.repository.UserRepository;
 import hexlet.code.utils.TestUtils;
-import hexlet.code.controller.UsersController;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -18,6 +17,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import javax.transaction.Transactional;
 
+import static hexlet.code.controller.UsersController.ID;
+import static hexlet.code.controller.UsersController.USERS_CONTROLLER_PATH;
+import static hexlet.code.utils.TestUtils.BASE_API_URL;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -52,7 +54,7 @@ class UsersControllerTest {
     void testCreateUserWithCorrectCredentials() throws Exception {
         MockHttpServletResponse resp = testUtils
                 .perform(
-                            MockMvcRequestBuilders.post(TestUtils.BASE_API_URL + UsersController.USERS_CONTROLLER_PATH)
+                            post(BASE_API_URL + USERS_CONTROLLER_PATH)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(userToCreateJson)
                 ).andReturn().getResponse();
@@ -71,7 +73,7 @@ class UsersControllerTest {
     void testCreateUserWithIncorrectCredentials() throws Exception {
         MockHttpServletResponse resp = testUtils
                 .perform(
-                                MockMvcRequestBuilders.post(TestUtils.BASE_API_URL + UsersController.USERS_CONTROLLER_PATH)
+                                post(BASE_API_URL + USERS_CONTROLLER_PATH)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(userToCreateWithIncorrectCredentialsJson)
                 ).andReturn().getResponse();
@@ -92,7 +94,7 @@ class UsersControllerTest {
         final User expectedUser = userRepository.findAll().get(0);
 
         MockHttpServletResponse resp = testUtils.perform(
-                get(TestUtils.BASE_API_URL + UsersController.USERS_CONTROLLER_PATH + UsersController.ID, expectedUser.getId()),
+                get(BASE_API_URL + USERS_CONTROLLER_PATH + ID, expectedUser.getId()),
                 expectedUser.getEmail()
         ).andReturn().getResponse();
 
@@ -109,7 +111,7 @@ class UsersControllerTest {
         final User expectedUser = userRepository.findAll().get(0);
 
         MockHttpServletResponse resp = testUtils.perform(
-                get(TestUtils.BASE_API_URL + UsersController.USERS_CONTROLLER_PATH + UsersController.ID, expectedUser.getId())
+                get(BASE_API_URL + USERS_CONTROLLER_PATH + ID, expectedUser.getId())
         ).andReturn().getResponse();
 
         assertThat(resp.getStatus()).isEqualTo(401);
@@ -121,7 +123,7 @@ class UsersControllerTest {
 
         MockHttpServletResponse resp = testUtils
                 .perform(
-                        MockMvcRequestBuilders.get(TestUtils.BASE_API_URL + UsersController.USERS_CONTROLLER_PATH + UsersController.ID, "568"),
+                        MockMvcRequestBuilders.get(BASE_API_URL + USERS_CONTROLLER_PATH + ID, "568"),
                         expectedUser.getEmail()
                 ).andReturn().getResponse();
 
@@ -135,7 +137,7 @@ class UsersControllerTest {
     void testGetAllUsers() throws Exception {
         MockHttpServletResponse resp = testUtils
                 .perform(
-                    MockMvcRequestBuilders.get(TestUtils.BASE_API_URL + UsersController.USERS_CONTROLLER_PATH)
+                    MockMvcRequestBuilders.get(BASE_API_URL + USERS_CONTROLLER_PATH)
                 ).andReturn().getResponse();
 
         String response = resp.getContentAsString();
@@ -151,7 +153,7 @@ class UsersControllerTest {
 
         MockHttpServletResponse resp = testUtils
                 .perform(
-                        put(TestUtils.BASE_API_URL + UsersController.USERS_CONTROLLER_PATH + UsersController.ID, expectedUser.getId())
+                        put(BASE_API_URL + USERS_CONTROLLER_PATH + ID, expectedUser.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(userToPatchJson),
                         expectedUser.getEmail()
@@ -177,7 +179,7 @@ class UsersControllerTest {
         final Long existentUserInDbId = 30L;
 
         MockHttpServletResponse resp = testUtils.perform(
-                MockMvcRequestBuilders.put(TestUtils.BASE_API_URL + UsersController.USERS_CONTROLLER_PATH + UsersController.ID, existentUserInDbId)
+                MockMvcRequestBuilders.put(BASE_API_URL + USERS_CONTROLLER_PATH + ID, existentUserInDbId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(userToPatchJson),
                 expectedUser.getEmail()
@@ -197,7 +199,7 @@ class UsersControllerTest {
 
         MockHttpServletResponse resp = testUtils
                 .perform(
-                            put(TestUtils.BASE_API_URL + UsersController.USERS_CONTROLLER_PATH + UsersController.ID, expectedUser.getId())
+                            put(BASE_API_URL + USERS_CONTROLLER_PATH + ID, expectedUser.getId())
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(userToCreateWithIncorrectCredentialsJson),
                         expectedUser.getEmail()
@@ -220,7 +222,7 @@ class UsersControllerTest {
 
         MockHttpServletResponse resp = testUtils
                 .perform(
-                        delete(TestUtils.BASE_API_URL + UsersController.USERS_CONTROLLER_PATH + UsersController.ID, expectedUser.getId()),
+                        delete(BASE_API_URL + USERS_CONTROLLER_PATH + ID, expectedUser.getId()),
                         expectedUser.getEmail()
                 ).andReturn().getResponse();
 
@@ -237,7 +239,7 @@ class UsersControllerTest {
         final Long existentUserInDbId = 30L;
 
         MockHttpServletResponse resp = testUtils.perform(
-                MockMvcRequestBuilders.delete(TestUtils.BASE_API_URL + UsersController.USERS_CONTROLLER_PATH + UsersController.ID, existentUserInDbId),
+                MockMvcRequestBuilders.delete(BASE_API_URL + USERS_CONTROLLER_PATH + ID, existentUserInDbId),
                 expectedUser.getEmail()
         ).andReturn().getResponse();
 

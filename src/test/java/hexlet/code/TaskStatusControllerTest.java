@@ -6,8 +6,6 @@ import hexlet.code.model.User;
 import hexlet.code.repository.TaskStatusRepository;
 import hexlet.code.repository.UserRepository;
 import hexlet.code.utils.TestUtils;
-import hexlet.code.controller.TaskStatusController;
-import hexlet.code.controller.UsersController;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -17,11 +15,12 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
 
+import static hexlet.code.controller.TaskStatusController.TASK_STATUS_CONTROLLER_PATH;
+import static hexlet.code.controller.UsersController.ID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -65,7 +64,7 @@ public class TaskStatusControllerTest {
     @Test
     void testGetTaskStatusById() throws Exception {
         MockHttpServletResponse resp = testUtils.perform(
-                MockMvcRequestBuilders.get(TestUtils.BASE_API_URL + TaskStatusController.TASK_STATUS_CONTROLLER_PATH + UsersController.ID, 1)
+                get(TestUtils.BASE_API_URL + TASK_STATUS_CONTROLLER_PATH + ID, 1)
         ).andReturn().getResponse();
 
         String body = resp.getContentAsString();
@@ -80,7 +79,7 @@ public class TaskStatusControllerTest {
     @Test
     void testGetAllTasks() throws Exception {
         MockHttpServletResponse resp = testUtils.perform(
-                MockMvcRequestBuilders.get(TestUtils.BASE_API_URL + TaskStatusController.TASK_STATUS_CONTROLLER_PATH)
+                get(TestUtils.BASE_API_URL + TASK_STATUS_CONTROLLER_PATH)
         ).andReturn().getResponse();
 
         assertThat(resp.getStatus()).isEqualTo(200);
@@ -91,7 +90,7 @@ public class TaskStatusControllerTest {
         User user = userRepository.findAll().get(0);
 
         MockHttpServletResponse resp = testUtils.perform(
-                MockMvcRequestBuilders.put(TestUtils.BASE_API_URL + TaskStatusController.TASK_STATUS_CONTROLLER_PATH + UsersController.ID, 1)
+                put(TestUtils.BASE_API_URL + TASK_STATUS_CONTROLLER_PATH + ID, 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(taskStatusToChangeJson),
                 user.getEmail()
@@ -110,7 +109,7 @@ public class TaskStatusControllerTest {
         User user = userRepository.findAll().get(0);
 
         MockHttpServletResponse resp = testUtils.perform(
-                MockMvcRequestBuilders.delete(TestUtils.BASE_API_URL + TaskStatusController.TASK_STATUS_CONTROLLER_PATH + UsersController.ID, 3),
+                delete(TestUtils.BASE_API_URL + TASK_STATUS_CONTROLLER_PATH + ID, 3),
                 user.getEmail()
         ).andReturn().getResponse();
 
@@ -122,7 +121,7 @@ public class TaskStatusControllerTest {
     void testCreateTaskWithInvalidName() throws Exception {
         User user = userRepository.findAll().get(0);
         MockHttpServletResponse resp = testUtils.perform(
-                MockMvcRequestBuilders.post(TestUtils.BASE_API_URL + TaskStatusController.TASK_STATUS_CONTROLLER_PATH)
+                post(TestUtils.BASE_API_URL + TASK_STATUS_CONTROLLER_PATH)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(taskStatusToCreateInvalidJson),
                 user.getEmail()
@@ -137,7 +136,7 @@ public class TaskStatusControllerTest {
     @Test
     void testCreateTaskStatusWithoutAuthorization() throws Exception {
         MockHttpServletResponse resp = testUtils.perform(
-                MockMvcRequestBuilders.post(TestUtils.BASE_API_URL + TaskStatusController.TASK_STATUS_CONTROLLER_PATH)
+                post(TestUtils.BASE_API_URL + TASK_STATUS_CONTROLLER_PATH)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(taskStatusToChangeJson)
         ).andReturn().getResponse();
@@ -151,7 +150,7 @@ public class TaskStatusControllerTest {
         testUtils.regDefaultTaskStatus();
 
         MockHttpServletResponse resp = testUtils.perform(
-                MockMvcRequestBuilders.put(TestUtils.BASE_API_URL + TaskStatusController.TASK_STATUS_CONTROLLER_PATH + UsersController.ID, 1)
+                put(TestUtils.BASE_API_URL + TASK_STATUS_CONTROLLER_PATH + ID, 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(taskStatusToChangeJson)
         ).andReturn().getResponse();
@@ -163,7 +162,7 @@ public class TaskStatusControllerTest {
     @Test
     void testDeleteTaskStatusWithoutAuthorization() throws Exception {
         MockHttpServletResponse resp = testUtils.perform(
-                MockMvcRequestBuilders.delete(TestUtils.BASE_API_URL + TaskStatusController.TASK_STATUS_CONTROLLER_PATH + UsersController.ID, 1)
+                delete(TestUtils.BASE_API_URL + TASK_STATUS_CONTROLLER_PATH + ID, 1)
         ).andReturn().getResponse();
 
         assertThat(resp.getStatus()).isEqualTo(401);

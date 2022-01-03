@@ -39,13 +39,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                           @Lazy final TokenAuthenticationProvider tokenAuthenticationProvider) {
         this.authenticationProvider = tokenAuthenticationProvider;
         this.publicUrls = new OrRequestMatcher(
-                new AntPathRequestMatcher(baseUrl + AuthController.LOGIN_CONTROLLER_PATH, HttpMethod.POST.toString()),
-                new AntPathRequestMatcher(baseUrl + UsersController.USERS_CONTROLLER_PATH, HttpMethod.POST.toString()),
-                new AntPathRequestMatcher(baseUrl + UsersController.USERS_CONTROLLER_PATH, HttpMethod.GET.toString()),
-                new AntPathRequestMatcher(baseUrl + TaskStatusController.TASK_STATUS_CONTROLLER_PATH, HttpMethod.GET.toString()),
-                new AntPathRequestMatcher(baseUrl + TaskStatusController.TASK_STATUS_CONTROLLER_PATH + UsersController.ID, HttpMethod.GET.toString()),
+                new AntPathRequestMatcher(baseUrl + AuthController.LOGIN_CONTROLLER_PATH,
+                        HttpMethod.POST.toString()),
+                new AntPathRequestMatcher(baseUrl + UsersController.USERS_CONTROLLER_PATH,
+                        HttpMethod.POST.toString()),
+                new AntPathRequestMatcher(baseUrl + UsersController.USERS_CONTROLLER_PATH,
+                        HttpMethod.GET.toString()),
+                new AntPathRequestMatcher(baseUrl + TaskStatusController.TASK_STATUS_CONTROLLER_PATH,
+                        HttpMethod.GET.toString()),
+                new AntPathRequestMatcher(baseUrl + TaskStatusController.TASK_STATUS_CONTROLLER_PATH
+                        + UsersController.ID, HttpMethod.GET.toString()),
                 new AntPathRequestMatcher(baseUrl + TASK_CONTROLLER_PATH, HttpMethod.GET.toString()),
-                new AntPathRequestMatcher(baseUrl + TaskStatusController.TASK_STATUS_CONTROLLER_PATH + UsersController.ID, HttpMethod.GET.toString()),
+                new AntPathRequestMatcher(baseUrl + TaskStatusController.TASK_STATUS_CONTROLLER_PATH
+                        + UsersController.ID, HttpMethod.GET.toString()),
                 new NegatedRequestMatcher(new AntPathRequestMatcher(baseUrl + "/**"))
         );
         this.protectedUrls = new NegatedRequestMatcher(publicUrls);
