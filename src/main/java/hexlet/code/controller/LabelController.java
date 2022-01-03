@@ -25,6 +25,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 import static hexlet.code.controller.LabelController.LABEL_CONTROLLER_PATH;
+import static hexlet.code.controller.UsersController.ID;
 
 @AllArgsConstructor
 @RestController
@@ -54,7 +55,7 @@ public class LabelController {
             @ApiResponse(responseCode = "401", description = "Unauthorized"),
             @ApiResponse(responseCode = "404", description = "Label with such ID not found")
     })
-    @PutMapping(UsersController.ID)
+    @PutMapping(ID)
     public Label changeLabel(@Valid @RequestBody LabelCreationDto labelCreationDto,
                              @PathVariable(name = "id") Long id) {
         return labelService.changeLabel(id, labelCreationDto);
@@ -65,7 +66,7 @@ public class LabelController {
             @ApiResponse(responseCode = "200", description = "Get label"),
             @ApiResponse(responseCode = "404", description = "Label with such ID not found"),
     })
-    @GetMapping(UsersController.ID)
+    @GetMapping(ID)
     public Label getLabelById(@PathVariable(name = "id") Long id) {
         return labelRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Label with such ID not found"));
@@ -85,7 +86,7 @@ public class LabelController {
             @ApiResponse(responseCode = "422", description = "Invalid arguments"),
             @ApiResponse(responseCode = "401", description = "Unauthorized")
     })
-    @DeleteMapping(UsersController.ID)
+    @DeleteMapping(ID)
     public String deleteLabel(@PathVariable(name = "id") Long id) {
         labelRepository.deleteById(id);
         return "OK";

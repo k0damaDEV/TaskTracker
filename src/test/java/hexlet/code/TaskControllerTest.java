@@ -23,6 +23,7 @@ import static hexlet.code.controller.UsersController.ID;
 import static hexlet.code.utils.TestUtils.BASE_API_URL;
 import static org.assertj.core.api.Assertions.assertThat;
 import static hexlet.code.controller.TaskController.BY;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
@@ -110,5 +111,33 @@ public class TaskControllerTest {
         assertThat(resp.getStatus()).isEqualTo(200);
         assertThat(body).contains("Second Test Task");
         assertThat(body).doesNotContain("First Test Task");
+    }
+
+    @Test
+    void testDeleteTaskById() throws Exception {
+        User user = userRepository.findById(20L).get();
+        Task task = taskRepository.findById(1L).get();
+
+        MockHttpServletResponse resp = testUtils.perform(
+                delete(BASE_API_URL + TASK_CONTROLLER_PATH + ID, task.getId()),
+                user.getEmail()
+        ).andReturn().getResponse();
+
+        assertThat(resp.getStatus()).isEqualTo(200);
+        assertThat(taskRepository.findById(task.getId())).isNotPresent();
+    }
+
+    @Test
+    void testUserCantDeleteNotHisOwnTask() throws Exception {
+        User user = userRepository.findById(20L).get();
+        Task task = taskRepository.findById(2L).get();
+
+        MockHttpServletResponse resp = testUtils.perform(
+                delete(BASE_API_URL + TASK_CONTROLLER_PATH + ID, task.getId()),
+                user.getEmail()
+        ).andReturn().getResponse();
+
+        assertThat(resp.getStatus()).isEqualTo(401);
+        assertThat(taskRepository.findById(task.getId())).isPresent();
     }
 }

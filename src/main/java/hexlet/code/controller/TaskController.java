@@ -28,6 +28,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 import static hexlet.code.controller.TaskController.TASK_CONTROLLER_PATH;
+import static hexlet.code.controller.UsersController.ID;
 
 @AllArgsConstructor
 @RestController
@@ -35,6 +36,9 @@ import static hexlet.code.controller.TaskController.TASK_CONTROLLER_PATH;
 public class TaskController {
     public static final String TASK_CONTROLLER_PATH = "/tasks";
     public static final String BY = "/by";
+    private static final String ONLY_TASK_OWNER_BY_ID = """
+            @taskRepository.findById(#id).get().getAuthor().getEmail() == authentication.getName()
+        """;
 
     private TaskService taskService;
     private TaskRepository taskRepository;
@@ -57,7 +61,7 @@ public class TaskController {
             @ApiResponse(responseCode = "404", description = "Task not found"),
             @ApiResponse(responseCode = "401", description = "Unauthorized")
     })
-    @GetMapping(UsersController.ID)
+    @GetMapping(ID)
     public Task getTaskById(@PathVariable(name = "id") Long id) {
         return taskRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Task with such ID not found."));
@@ -76,7 +80,7 @@ public class TaskController {
             @ApiResponse(responseCode = "200", description = "Task was changed"),
             @ApiResponse(responseCode = "422", description = "Arguments not valid")
     })
-    @PutMapping(UsersController.ID)
+    @PutMapping(ID)
     public Task updateTask(@PathVariable(name = "id") Long id, @Valid @RequestBody TaskCreationDto taskCreationDto) {
         return taskService.updateTask(id, taskCreationDto);
     }
@@ -84,10 +88,11 @@ public class TaskController {
     @Operation(summary = "Delete task by ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Task has been deleted"),
-            @ApiResponse(responseCode = "404", description = "Task with such ID not found")
+            @ApiResponse(responseCode = "404", description = "Task with such ID not found"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized")
     })
-    @DeleteMapping(UsersController.ID)
-    @PreAuthorize(UsersController.ONLY_OWNER_BY_ID)
+    @DeleteMapping(ID)
+    @PreAuthorize(ONLY_TASK_OWNER_BY_ID)
     public String deleteTask(@PathVariable(name = "id") Long id) {
         taskRepository.deleteById(id);
         return "OK";
