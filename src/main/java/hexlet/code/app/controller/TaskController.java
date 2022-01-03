@@ -6,6 +6,9 @@ import hexlet.code.app.exceptions.NotFoundException;
 import hexlet.code.app.model.Task;
 import hexlet.code.app.repository.TaskRepository;
 import hexlet.code.app.service.TaskService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.AllArgsConstructor;
 import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -36,27 +39,52 @@ public class TaskController {
     private TaskService taskService;
     private TaskRepository taskRepository;
 
+    @Operation(summary = "Create new task")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Task has been created"),
+            @ApiResponse(responseCode = "422", description = "Arguments not valid"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized")
+    })
     @PostMapping
     public Task createNewTask(@Valid @RequestBody TaskCreationDto taskCreationDto) {
         return taskService.createNewTask(taskCreationDto);
     }
 
+    @Operation(summary = "Get task by ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Task found"),
+            @ApiResponse(responseCode = "404", description = "Task not found"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized")
+    })
     @GetMapping(ID)
     public Task getTaskById(@PathVariable(name = "id") Long id) {
         return taskRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Task with such ID not found."));
     }
 
+    @Operation(summary = "Get all tasks")
+    @ApiResponse(responseCode = "200", description = "Get all tasks")
     @GetMapping
     public List<Task> getAllTasks() {
         return taskRepository.findAll();
     }
 
+
+    @Operation(summary = "Change task information")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Task was changed"),
+            @ApiResponse(responseCode = "422", description = "Arguments not valid")
+    })
     @PutMapping(ID)
     public Task updateTask(@PathVariable(name = "id") Long id, @Valid @RequestBody TaskCreationDto taskCreationDto) {
         return taskService.updateTask(id, taskCreationDto);
     }
 
+    @Operation(summary = "Delete task by ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Task has been deleted"),
+            @ApiResponse(responseCode = "404", description = "Task with such ID not found")
+    })
     @DeleteMapping(ID)
     @PreAuthorize(ONLY_OWNER_BY_ID)
     public String deleteTask(@PathVariable(name = "id") Long id) {
@@ -64,6 +92,8 @@ public class TaskController {
         return "OK";
     }
 
+    @Operation(summary = "Filter tasks")
+    @ApiResponse(responseCode = "200", description = "Filration result")
     @GetMapping("/by")
     public Iterable<Task> getTasksBy(@QuerydslPredicate Predicate predicate) {
         return taskRepository.findAll(predicate);

@@ -5,6 +5,9 @@ import hexlet.code.app.exceptions.NotFoundException;
 import hexlet.code.app.model.User;
 import hexlet.code.app.repository.UserRepository;
 import hexlet.code.app.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,26 +34,45 @@ public class UsersController {
             @userRepository.findById(#id).get().getEmail() == authentication.getName()
         """;
 
-
     private final UserService userService;
     private final UserRepository userRepository;
 
+    @Operation(summary = "Get all users")
+    @ApiResponse(responseCode = "200", description = "All users")
     @GetMapping()
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
+    @Operation(summary = "Create new user")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User has been created"),
+            @ApiResponse(responseCode = "422", description = "Invalid arguments")
+    })
     @PostMapping()
     public User createUser(@RequestBody @Valid final UserDto userDto) {
         return userService.createNewUser(userDto);
     }
 
+    @Operation(summary = "Get user by ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Get user"),
+            @ApiResponse(responseCode = "404", description = "User with such ID not found"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized")
+    })
     @GetMapping(ID)
     public User getUserById(@PathVariable(name = "id") Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User with such ID not found"));
     }
 
+    @Operation(summary = "Change user data")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User has been changed"),
+            @ApiResponse(responseCode = "404", description = "User with such ID not found"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized/Can't update another user"),
+            @ApiResponse(responseCode = "422", description = "User with such ID not found")
+    })
     @PutMapping(ID)
     @PreAuthorize(ONLY_OWNER_BY_ID)
     public User updateUser(
@@ -60,6 +82,12 @@ public class UsersController {
         return userService.updateUserData(id, userDto);
     }
 
+    @Operation(summary = "Delete user by ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User has been deleted"),
+            @ApiResponse(responseCode = "404", description = "User with such ID not found"),
+            @ApiResponse(responseCode = "401", description = "Can't delete another user/Unauthorized")
+    })
     @DeleteMapping(ID)
     @PreAuthorize(ONLY_OWNER_BY_ID)
     public String deleteUser(@PathVariable(name = "id") Long id) {

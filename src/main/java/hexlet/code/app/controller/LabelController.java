@@ -5,6 +5,9 @@ import hexlet.code.app.exceptions.NotFoundException;
 import hexlet.code.app.model.Label;
 import hexlet.code.app.repository.LabelRepository;
 import hexlet.code.app.service.LabelService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,28 +34,55 @@ public class LabelController {
     private LabelService labelService;
     private LabelRepository labelRepository;
 
+    @Operation(summary = "Create new label")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Label was created"),
+            @ApiResponse(responseCode = "422", description = "Invalid arguments"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized")
+    })
     @PostMapping
     public Label createNewLabel(@Valid @RequestBody LabelCreationDto labelCreationDto) {
         return labelService.createNewLabel(labelCreationDto);
     }
 
+    @Operation(summary = "Change label data")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Label has been changed"),
+            @ApiResponse(responseCode = "422", description = "Invalid arguments"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "404", description = "Label with such ID not found")
+    })
     @PutMapping(ID)
     public Label changeLabel(@Valid @RequestBody LabelCreationDto labelCreationDto,
                              @PathVariable(name = "id") Long id) {
         return labelService.changeLabel(id, labelCreationDto);
     }
 
+    @Operation(summary = "Get label by ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Get label"),
+            @ApiResponse(responseCode = "404", description = "Label with such ID not found"),
+    })
     @GetMapping(ID)
     public Label getLabelById(@PathVariable(name = "id") Long id) {
         return labelRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Label with such ID not found"));
     }
 
+    @Operation(summary = "Get all labels")
+    @ApiResponse(responseCode = "200", description = "Get all labels")
     @GetMapping
     public List<Label> getAllLabels() {
         return labelRepository.findAll();
     }
 
+    @Operation(summary = "Delete label by ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Label has been deleted"),
+            @ApiResponse(responseCode = "404", description = "Label withc such ID not found"),
+            @ApiResponse(responseCode = "422", description = "Invalid arguments"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized")
+    })
     @DeleteMapping(ID)
     public String deleteLabel(@PathVariable(name = "id") Long id) {
         labelRepository.deleteById(id);
