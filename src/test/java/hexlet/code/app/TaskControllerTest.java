@@ -25,6 +25,7 @@ import static hexlet.code.app.controller.UsersController.ID;
 import static hexlet.code.app.controller.TaskController.TASK_CONTROLLER_PATH;
 import static org.assertj.core.api.Assertions.assertThat;
 import static hexlet.code.app.utils.TestUtils.FIXTURES_PATH;
+import static hexlet.code.app.controller.TaskController.BY;
 
 @SpringBootTest
 @Transactional
@@ -95,5 +96,20 @@ public class TaskControllerTest {
         ).andReturn().getResponse();
 
         assertThat(resp.getStatus()).isEqualTo(200);
+    }
+
+    @Test
+    void testFilterTasks1() throws Exception {
+        User user = userRepository.findAll().get(0);
+        MockHttpServletResponse resp = testUtils.perform(
+                get(BASE_API_URL + TASK_CONTROLLER_PATH + BY + "?taskStatus=2&executorId=50"),
+                user.getEmail()
+        ).andReturn().getResponse();
+
+        String body = resp.getContentAsString();
+
+        assertThat(resp.getStatus()).isEqualTo(200);
+        assertThat(body).contains("Second Test Task");
+        assertThat(body).doesNotContain("First Test Task");
     }
 }
