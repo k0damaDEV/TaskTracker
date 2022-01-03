@@ -1,6 +1,5 @@
 package hexlet.code.app.dto;
 
-import hexlet.code.app.model.Label;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

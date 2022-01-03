@@ -2,7 +2,6 @@ package hexlet.code.app.service.impl;
 
 import hexlet.code.app.dto.TaskCreationDto;
 import hexlet.code.app.exceptions.NotFoundException;
-import hexlet.code.app.model.Label;
 import hexlet.code.app.model.Task;
 import hexlet.code.app.model.User;
 import hexlet.code.app.repository.LabelRepository;

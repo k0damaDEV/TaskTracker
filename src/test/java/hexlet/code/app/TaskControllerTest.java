@@ -18,14 +18,14 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import javax.transaction.Transactional;
 import java.io.IOException;
 
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static hexlet.code.app.utils.TestUtils.BASE_API_URL;
 import static hexlet.code.app.controller.UsersController.ID;
 import static hexlet.code.app.controller.TaskController.TASK_CONTROLLER_PATH;
 import static org.assertj.core.api.Assertions.assertThat;
 import static hexlet.code.app.utils.TestUtils.FIXTURES_PATH;
 import static hexlet.code.app.controller.TaskController.BY;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
 @SpringBootTest
 @Transactional

@@ -21,7 +21,9 @@ public class TokenAuthenticationProvider extends AbstractUserDetailsAuthenticati
     private final UserAuthenticationService authenticationService;
 
     @Override
-    protected void additionalAuthenticationChecks(UserDetails userDetails, UsernamePasswordAuthenticationToken authentication) throws AuthenticationException {
+    protected void additionalAuthenticationChecks(UserDetails userDetails,
+                                                  UsernamePasswordAuthenticationToken authentication)
+            throws AuthenticationException {
 
     }
 

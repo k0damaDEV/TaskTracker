@@ -6,7 +6,14 @@ import hexlet.code.app.model.Label;
 import hexlet.code.app.repository.LabelRepository;
 import hexlet.code.app.service.LabelService;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
 import javax.validation.Valid;
 
@@ -30,7 +37,8 @@ public class LabelController {
     }
 
     @PutMapping(ID)
-    public Label changeLabel(@Valid @RequestBody LabelCreationDto labelCreationDto, @PathVariable(name = "id") Long id) {
+    public Label changeLabel(@Valid @RequestBody LabelCreationDto labelCreationDto,
+                             @PathVariable(name = "id") Long id) {
         return labelService.changeLabel(id, labelCreationDto);
     }
 

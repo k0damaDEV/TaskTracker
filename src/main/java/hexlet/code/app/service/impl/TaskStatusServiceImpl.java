@@ -8,8 +8,6 @@ import hexlet.code.app.service.TaskStatusService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
-
 @Service
 @AllArgsConstructor
 public class TaskStatusServiceImpl implements TaskStatusService {

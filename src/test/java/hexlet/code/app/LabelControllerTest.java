@@ -20,7 +20,9 @@ import java.io.IOException;
 import static hexlet.code.app.controller.LabelController.LABEL_CONTROLLER_PATH;
 import static hexlet.code.app.controller.UsersController.ID;
 import static hexlet.code.app.utils.TestUtils.BASE_API_URL;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.assertj.core.api.Assertions.assertThat;
 import static hexlet.code.app.utils.TestUtils.FIXTURES_PATH;
 

@@ -17,12 +17,15 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import javax.transaction.Transactional;
 import java.io.IOException;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static hexlet.code.app.controller.TaskStatusController.TASK_STATUS_CONTROLLER_PATH;
 import static hexlet.code.app.utils.TestUtils.BASE_API_URL;
 import static hexlet.code.app.controller.UsersController.ID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static hexlet.code.app.utils.TestUtils.FIXTURES_PATH;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 
 @SpringBootTest
@@ -48,7 +51,7 @@ public class TaskStatusControllerTest {
         taskStatusToChangeJson = testUtils
                 .readFileContent(FIXTURES_PATH + "taskStatusToChange.json");
         taskStatusToCreateInvalidJson = testUtils
-                .readFileContent( FIXTURES_PATH + "taskStatusInvalidCreate.json");
+                .readFileContent(FIXTURES_PATH + "taskStatusInvalidCreate.json");
     }
 
     @Test

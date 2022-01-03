@@ -14,7 +14,7 @@ public interface TaskRepository extends JpaRepository<Task, Long>,
                                         QuerydslBinderCustomizer<QTask> {
 
     @Override
-    default void customize(QuerydslBindings bindings, QTask task){
+    default void customize(QuerydslBindings bindings, QTask task) {
 
     }
 }

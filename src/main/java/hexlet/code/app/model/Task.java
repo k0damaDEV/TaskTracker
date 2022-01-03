@@ -6,10 +6,20 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.lang.Nullable;
 
-import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Column;
+import javax.persistence.ManyToOne;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @NoArgsConstructor
@@ -37,13 +47,17 @@ public class Task {
     @JoinTable(name = "TASK_LABELS")
     @Nullable
     @ManyToMany
-    List<Label> labels;
+    private List<Label> labels;
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "createdAt")
     private Date createdAt;
 
-    public Task(String name, @Nullable String description, TaskStatus taskStatus, User author, @Nullable User executor) {
+    public Task(String name,
+                @Nullable String description,
+                TaskStatus taskStatus,
+                User author,
+                @Nullable User executor) {
         this.name = name;
         this.description = description;
         this.taskStatus = taskStatus;
