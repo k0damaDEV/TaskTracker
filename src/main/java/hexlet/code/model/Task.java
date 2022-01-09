@@ -20,6 +20,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.Size;
 
 @Entity
 @NoArgsConstructor
@@ -29,25 +30,33 @@ public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(name = "name")
+    @Size(min = 1, message = "Name must contains at least one character.")
     private String name;
+
     @Nullable
     @Column(name = "description")
     private String description;
+
     @NotNull
     @ManyToOne
     private TaskStatus taskStatus;
+
     @ManyToOne
     @JoinColumn(name = "authorId")
     private User author;
+
     @ManyToOne
     @Nullable
     @JoinColumn(name = "executorId")
     private User executor;
+
     @JoinTable(name = "TASK_LABELS")
     @Nullable
     @ManyToMany
     private List<Label> labels;
+
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "createdAt")

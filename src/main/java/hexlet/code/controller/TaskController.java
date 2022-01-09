@@ -28,7 +28,6 @@ import javax.validation.Valid;
 import java.util.List;
 
 import static hexlet.code.controller.TaskController.TASK_CONTROLLER_PATH;
-import static hexlet.code.controller.UsersController.ID;
 
 @AllArgsConstructor
 @RestController
@@ -36,6 +35,7 @@ import static hexlet.code.controller.UsersController.ID;
 public class TaskController {
     public static final String TASK_CONTROLLER_PATH = "/tasks";
     public static final String BY = "/by";
+    private static final String ID = "/{id}";
     private static final String ONLY_TASK_OWNER_BY_ID = """
             @taskRepository.findById(#id).get().getAuthor().getEmail() == authentication.getName()
         """;
@@ -100,7 +100,7 @@ public class TaskController {
 
     @Operation(summary = "Filter tasks")
     @ApiResponse(responseCode = "200", description = "Filration result")
-    @GetMapping("/by")
+    @GetMapping(BY)
     public Iterable<Task> getTasksBy(@QuerydslPredicate Predicate predicate) {
         return taskRepository.findAll(predicate);
     }

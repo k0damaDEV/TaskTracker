@@ -21,14 +21,13 @@ import javax.validation.Valid;
 import java.util.List;
 
 import static hexlet.code.controller.TaskStatusController.TASK_STATUS_CONTROLLER_PATH;
-import static hexlet.code.controller.UsersController.ID;
 
 @AllArgsConstructor
 @RestController
 @RequestMapping("${base-url}" + TASK_STATUS_CONTROLLER_PATH)
 public class TaskStatusController {
-
     public static final String TASK_STATUS_CONTROLLER_PATH = "/statuses";
+    private static final String ID = "/{id}";
 
     private final TaskStatusRepository taskStatusRepository;
     private final TaskStatusService taskStatusService;

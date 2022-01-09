@@ -25,13 +25,13 @@ import javax.validation.Valid;
 import java.util.List;
 
 import static hexlet.code.controller.LabelController.LABEL_CONTROLLER_PATH;
-import static hexlet.code.controller.UsersController.ID;
 
 @AllArgsConstructor
 @RestController
 @RequestMapping("${base-url}" + LABEL_CONTROLLER_PATH)
 public class LabelController {
     public static final String LABEL_CONTROLLER_PATH = "/labels";
+    private static final String ID = "/{id}";
 
     private LabelService labelService;
     private LabelRepository labelRepository;

@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -15,7 +14,6 @@ import javax.validation.constraints.Size;
 public class UserDto {
     @NotNull
     @Email(message = "Email is not valid.")
-    @Column(unique = true)
     private String email;
     @NotNull
     @Size(min = 1, message = "First name must contains at least one character")
