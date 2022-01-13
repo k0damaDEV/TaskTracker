@@ -8,3 +8,5 @@
 
 
 [API available here](https://murmuring-lowlands-34103.herokuapp.com/swagger-ui.html)
+
+[Project Example on Heroku](https://murmuring-lowlands-34103.herokuapp.com/) - feel free to play with it!
