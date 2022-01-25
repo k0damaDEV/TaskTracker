@@ -22,7 +22,7 @@ public class AuthController {
 
     @PostMapping(path = "")
     public String login(@RequestBody UserLoginDto userLoginDto) {
-        return authenticationService.login(userLoginDto.getEmail(), userLoginDto.getPassword());
+        return authenticationService.login(userLoginDto.email(), userLoginDto.password());
     }
 
 }

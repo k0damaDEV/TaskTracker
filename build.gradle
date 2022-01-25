@@ -17,7 +17,7 @@ application {
 
 group = 'hexlet.code'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = "15"
+sourceCompatibility = "16"
 
 repositories {
     mavenCentral()
@@ -121,4 +121,4 @@ processResources.dependsOn assembleFrontend
 task stage(dependsOn: ['clean', 'installDist'])
 installDist.mustRunAfter clean
 
-targetCompatibility = JavaVersion.VERSION_15
+targetCompatibility = JavaVersion.VERSION_16

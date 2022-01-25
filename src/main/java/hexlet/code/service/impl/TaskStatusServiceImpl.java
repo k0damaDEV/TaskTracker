@@ -17,7 +17,7 @@ public class TaskStatusServiceImpl implements TaskStatusService {
     @Override
     public TaskStatus createTaskStatus(TaskStatusDto taskStatusDto) {
         return taskStatusRepository.save(new TaskStatus(
-                taskStatusDto.getName()
+                taskStatusDto.name()
         ));
     }
 
@@ -26,7 +26,7 @@ public class TaskStatusServiceImpl implements TaskStatusService {
         TaskStatus dbTask = taskStatusRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Task status with such ID not found"));
 
-        dbTask.setName(taskStatusDto.getName());
+        dbTask.setName(taskStatusDto.name());
 
         return taskStatusRepository.save(dbTask);
     }

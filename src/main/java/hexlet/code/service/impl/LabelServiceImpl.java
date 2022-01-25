@@ -17,7 +17,7 @@ public class LabelServiceImpl implements LabelService {
     @Override
     public Label createNewLabel(LabelCreationDto labelCreationDto) {
         return labelRepository.save(new Label(
-                labelCreationDto.getName()
+                labelCreationDto.name()
         ));
     }
 
@@ -25,7 +25,7 @@ public class LabelServiceImpl implements LabelService {
     public Label changeLabel(Long id, LabelCreationDto labelCreationDto) {
         Label dbLabel = labelRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Label with such ID not found."));
-        dbLabel.setName(labelCreationDto.getName());
+        dbLabel.setName(labelCreationDto.name());
         return labelRepository.save(dbLabel);
     }
 }

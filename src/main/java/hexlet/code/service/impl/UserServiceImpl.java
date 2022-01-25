@@ -18,15 +18,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createNewUser(UserDto userDto) {
-        if (userRepository.existsByEmail(userDto.getEmail())) {
+        if (userRepository.existsByEmail(userDto.email())) {
             throw new DuplicateKeyException("User with such email already exists");
         }
 
         return userRepository.save(new User(
-                userDto.getFirstName(),
-                userDto.getLastName(),
-                userDto.getEmail(),
-                encoder.encode(userDto.getPassword())
+                userDto.firstName(),
+                userDto.lastName(),
+                userDto.email(),
+                encoder.encode(userDto.password())
         ));
     }
 
@@ -35,10 +35,10 @@ public class UserServiceImpl implements UserService {
         User dbUser = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User with such ID not found."));
 
-        dbUser.setEmail(userDto.getEmail());
-        dbUser.setFirstName(userDto.getFirstName());
-        dbUser.setLastName(userDto.getLastName());
-        dbUser.setPassword(encoder.encode(userDto.getPassword()));
+        dbUser.setEmail(userDto.email());
+        dbUser.setFirstName(userDto.firstName());
+        dbUser.setLastName(userDto.lastName());
+        dbUser.setPassword(encoder.encode(userDto.password()));
 
         return userRepository.save(dbUser);
     }

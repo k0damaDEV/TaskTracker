@@ -27,17 +27,17 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public Task createNewTask(TaskCreationDto taskCreationDto) {
         Task task = new Task(
-                taskCreationDto.getName(),
-                taskCreationDto.getDescription(),
-                taskStatusRepository.findById(taskCreationDto.getTaskStatusId())
+                taskCreationDto.name(),
+                taskCreationDto.description(),
+                taskStatusRepository.findById(taskCreationDto.taskStatusId())
                         .orElseThrow(() -> new NotFoundException("Task status with such ID not found.")),
                 getCurrentUser(),
-                userRepository.findById(taskCreationDto.getExecutorId())
+                userRepository.findById(taskCreationDto.executorId())
                         .orElseThrow(() -> new NotFoundException("User with such ID not found."))
         );
 
-        if (taskCreationDto.getLabelIds() != null) {
-            task.setLabels(taskCreationDto.getLabelIds().stream().map(x -> labelRepository.findById(x)
+        if (taskCreationDto.labelIds() != null) {
+            task.setLabels(taskCreationDto.labelIds().stream().map(x -> labelRepository.findById(x)
                             .orElseThrow(() -> new NotFoundException("Label with such ID not found")))
                     .collect(Collectors.toList()));
         }
@@ -49,15 +49,15 @@ public class TaskServiceImpl implements TaskService {
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Task with such ID not found."));
 
-        task.setName(taskCreationDto.getName());
-        task.setDescription(taskCreationDto.getDescription());
-        task.setExecutor(userRepository.findById(taskCreationDto.getExecutorId())
+        task.setName(taskCreationDto.name());
+        task.setDescription(taskCreationDto.description());
+        task.setExecutor(userRepository.findById(taskCreationDto.executorId())
                 .orElseThrow(() -> new NotFoundException("User with such ID not found.")));
-        task.setTaskStatus(taskStatusRepository.findById(taskCreationDto.getTaskStatusId())
+        task.setTaskStatus(taskStatusRepository.findById(taskCreationDto.taskStatusId())
                 .orElseThrow(() -> new NotFoundException("Task status with such ID not found.")));
 
-        if (taskCreationDto.getLabelIds() != null) {
-            task.setLabels(taskCreationDto.getLabelIds().stream().map(x -> labelRepository.findById(x)
+        if (taskCreationDto.labelIds() != null) {
+            task.setLabels(taskCreationDto.labelIds().stream().map(x -> labelRepository.findById(x)
                             .orElseThrow(() -> new NotFoundException("Label with such ID not found.")))
                     .collect(Collectors.toList()));
         }
