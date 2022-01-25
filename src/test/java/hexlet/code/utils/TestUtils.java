@@ -29,6 +29,7 @@ import static hexlet.code.controller.TaskStatusController.TASK_STATUS_CONTROLLER
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static hexlet.code.controller.TaskController.TASK_CONTROLLER_PATH;
 import static hexlet.code.controller.LabelController.LABEL_CONTROLLER_PATH;
+import static hexlet.code.controller.UsersController.USERS_CONTROLLER_PATH;
 
 @Component
 @DBRider
@@ -90,6 +91,20 @@ public class TestUtils {
         ).andReturn().getResponse();
 
         return taskRepository.findAll().get(0);
+    }
+
+    public User regDefaultUser() throws Exception {
+        String userToCreateJson = readFileContent(FIXTURES_PATH + "userToCreate.json");
+        final User user = userRepository.findAll().get(0);
+
+        MockHttpServletResponse resp = perform(
+                post(BASE_API_URL + USERS_CONTROLLER_PATH)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(userToCreateJson),
+                user.getEmail()
+        ).andReturn().getResponse();
+
+        return userRepository.findAll().get(1);
     }
 
     public ResultActions perform(final MockHttpServletRequestBuilder request) throws Exception {

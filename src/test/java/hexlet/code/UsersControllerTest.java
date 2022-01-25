@@ -21,6 +21,7 @@ import static hexlet.code.controller.UsersController.ID;
 import static hexlet.code.controller.UsersController.USERS_CONTROLLER_PATH;
 import static hexlet.code.utils.TestUtils.BASE_API_URL;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -123,7 +124,7 @@ class UsersControllerTest {
 
         MockHttpServletResponse resp = testUtils
                 .perform(
-                        MockMvcRequestBuilders.get(BASE_API_URL + USERS_CONTROLLER_PATH + ID, "568"),
+                        get(BASE_API_URL + USERS_CONTROLLER_PATH + ID, "568"),
                         expectedUser.getEmail()
                 ).andReturn().getResponse();
 
@@ -137,7 +138,7 @@ class UsersControllerTest {
     void testGetAllUsers() throws Exception {
         MockHttpServletResponse resp = testUtils
                 .perform(
-                    MockMvcRequestBuilders.get(BASE_API_URL + USERS_CONTROLLER_PATH)
+                    get(BASE_API_URL + USERS_CONTROLLER_PATH)
                 ).andReturn().getResponse();
 
         String response = resp.getContentAsString();
@@ -179,7 +180,7 @@ class UsersControllerTest {
         final Long existentUserInDbId = 30L;
 
         MockHttpServletResponse resp = testUtils.perform(
-                MockMvcRequestBuilders.put(BASE_API_URL + USERS_CONTROLLER_PATH + ID, existentUserInDbId)
+                put(BASE_API_URL + USERS_CONTROLLER_PATH + ID, existentUserInDbId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(userToPatchJson),
                 expectedUser.getEmail()
@@ -239,7 +240,7 @@ class UsersControllerTest {
         final Long existentUserInDbId = 30L;
 
         MockHttpServletResponse resp = testUtils.perform(
-                MockMvcRequestBuilders.delete(BASE_API_URL + USERS_CONTROLLER_PATH + ID, existentUserInDbId),
+                delete(BASE_API_URL + USERS_CONTROLLER_PATH + ID, existentUserInDbId),
                 expectedUser.getEmail()
         ).andReturn().getResponse();
 
@@ -247,4 +248,16 @@ class UsersControllerTest {
         assertThat(userRepository.findById(existentUserInDbId)).isNotEmpty();
     }
 
+    @Test
+    void testDuplicateEmail() throws Exception {
+        testUtils.regDefaultUser();
+
+        MockHttpServletResponse resp = testUtils.perform(
+                post(BASE_API_URL + USERS_CONTROLLER_PATH)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(userToCreateJson)
+        ).andReturn().getResponse();
+
+        assertThat(resp.getStatus()).isEqualTo(422);
+    }
 }
