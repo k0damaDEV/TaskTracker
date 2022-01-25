@@ -6,6 +6,7 @@ import hexlet.code.model.User;
 import hexlet.code.repository.UserRepository;
 import hexlet.code.service.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createNewUser(UserDto userDto) {
+        if (userRepository.existsByEmail(userDto.getEmail())) {
+            throw new DuplicateKeyException("User with such email already exists");
+        }
+
         return userRepository.save(new User(
                 userDto.getFirstName(),
                 userDto.getLastName(),
