@@ -10,7 +10,8 @@
 
 <b>Configuration:</b> located in src/main/resources/config/application-{env}.properties, where {env} - name of the environment(dev, prod). General configuration located in src/main/resources/config/application.properties.
 
-<b>Launch:</b> to start project in development purposes:
+<b>Launch:</b>
+* To start project in development purposes:
 
 ```sh
 git clone https://github.com/k0damaDEV/TaskTracker.git project
