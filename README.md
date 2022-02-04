@@ -8,7 +8,7 @@
 
 [API available here](https://murmuring-lowlands-34103.herokuapp.com/swagger-ui.html)
 
-<b>Configuration:</b> located in src/main/resources/config. application-{env}.properties, where {env} - name of the environment(dev, prod). General configuration located in src/main/resources/config/application.properties.
+<b>Configuration:</b> located in src/main/resources/config/application-{env}.properties, where {env} - name of the environment(dev, prod). General configuration located in src/main/resources/config/application.properties.
 
 <b>Launch:</b> to start project in development purposes:
 
