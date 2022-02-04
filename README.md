@@ -47,6 +47,8 @@ cd project
 make start-dev
 ```
 
+* To start project in production purposes:
+
 ```sh
 git clone https://github.com/k0damaDEV/TaskTracker.git project
 cd project
