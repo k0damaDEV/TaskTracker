@@ -23,11 +23,11 @@ public class TaskStatusServiceImpl implements TaskStatusService {
 
     @Override
     public TaskStatus updateTaskStatus(TaskStatusDto taskStatusDto, Long id) {
-        TaskStatus dbTask = taskStatusRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Task status with such ID not found"));
-
-        dbTask.setName(taskStatusDto.name());
-
-        return taskStatusRepository.save(dbTask);
+        return taskStatusRepository.save(taskStatusRepository.findById(id)
+                .map(t -> {
+                    t.setName(taskStatusDto.name());
+                    return t;
+                })
+                .orElseThrow(() -> new NotFoundException("Task status with such ID not found")));
     }
 }

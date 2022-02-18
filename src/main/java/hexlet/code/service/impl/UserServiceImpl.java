@@ -32,14 +32,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateUserData(Long id, UserDto userDto) {
-        User dbUser = userRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("User with such ID not found."));
-
-        dbUser.setEmail(userDto.email());
-        dbUser.setFirstName(userDto.firstName());
-        dbUser.setLastName(userDto.lastName());
-        dbUser.setPassword(encoder.encode(userDto.password()));
-
-        return userRepository.save(dbUser);
+        return userRepository.save(userRepository.findById(id)
+                .map(u -> {
+                    u.setEmail(userDto.email());
+                    u.setFirstName(userDto.firstName());
+                    u.setLastName(userDto.lastName());
+                    u.setPassword(encoder.encode(userDto.password()));
+                    return u;
+                })
+                .orElseThrow(() -> new NotFoundException("User with such ID not found.")));
     }
 }

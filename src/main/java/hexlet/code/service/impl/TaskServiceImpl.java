@@ -46,23 +46,23 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Task updateTask(Long id, TaskCreationDto taskCreationDto) {
-        Task task = taskRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Task with such ID not found."));
+        return taskRepository.save(taskRepository.findById(id)
+                .map(t -> {
+                    t.setName(taskCreationDto.name());
+                    t.setDescription(taskCreationDto.description());
+                    t.setExecutor(userRepository.findById(taskCreationDto.executorId())
+                            .orElseThrow(() -> new NotFoundException("User with such ID not found.")));
+                    t.setTaskStatus(taskStatusRepository.findById(taskCreationDto.taskStatusId())
+                            .orElseThrow(() -> new NotFoundException("Task status with such ID not found.")));
 
-        task.setName(taskCreationDto.name());
-        task.setDescription(taskCreationDto.description());
-        task.setExecutor(userRepository.findById(taskCreationDto.executorId())
-                .orElseThrow(() -> new NotFoundException("User with such ID not found.")));
-        task.setTaskStatus(taskStatusRepository.findById(taskCreationDto.taskStatusId())
-                .orElseThrow(() -> new NotFoundException("Task status with such ID not found.")));
-
-        if (taskCreationDto.labelIds() != null) {
-            task.setLabels(taskCreationDto.labelIds().stream().map(x -> labelRepository.findById(x)
-                            .orElseThrow(() -> new NotFoundException("Label with such ID not found.")))
-                    .collect(Collectors.toList()));
-        }
-
-        return taskRepository.save(task);
+                    if (taskCreationDto.labelIds() != null) {
+                        t.setLabels(taskCreationDto.labelIds().stream().map(x -> labelRepository.findById(x)
+                                .orElseThrow(() -> new NotFoundException("Label with such ID not found")))
+                                .collect(Collectors.toList()));
+                    }
+                    return t;
+                })
+                .orElseThrow(() -> new NotFoundException("Task with such ID not found.")));
     }
 
     private String getCurrentUsername() {
