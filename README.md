@@ -42,7 +42,7 @@ Available to config in application-dev.properties:
 * To start project in development purposes:
 
 ```sh
-git clone https://github.com/k0damaDEV/TaskTracker.git project
+git clone https://github.com/tre3p/TaskTracker.git project
 cd project
 make start-dev
 ```
@@ -50,7 +50,7 @@ make start-dev
 * To start project in production purposes:
 
 ```sh
-git clone https://github.com/k0damaDEV/TaskTracker.git project
+git clone https://github.com/tre3p/TaskTracker.git project
 cd project
 make start-prod
 ```
